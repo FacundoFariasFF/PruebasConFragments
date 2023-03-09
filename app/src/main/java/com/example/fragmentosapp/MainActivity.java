@@ -28,15 +28,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 
 public class MainActivity extends AppCompatActivity{
     private ViewPager2 viewPager2;
 
-    private DatePickerDialog.OnDateSetListener listener;
+    //private DatePickerDialog.OnDateSetListener listener;
 
     MenuItem itemMonedas;
 
+    static String fechaSelec,fechaSelecdb = "00/00/0000";
+    String fechaHoy,fechaHoyAux;
+    static String fecha,compra,venta;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -44,14 +48,12 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       viewPager2 = findViewById(R.id.viewpager2);
+        viewPager2 = findViewById(R.id.viewpager2);
 
-        viewPager2.setAdapter(new AdaptadorFragment(getSupportFragmentManager(),getLifecycle()));
 
     }
     ////
     class AdaptadorFragment extends FragmentStateAdapter {
-
 
         //constructor de fragments
         public AdaptadorFragment(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
@@ -60,18 +62,65 @@ public class MainActivity extends AppCompatActivity{
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            switch (position){
-                case 6: return FragmentDolarOficial.newInstance("6");
-                case 5: return FragmentDolarOficial.newInstance("5");
-                case 4: return FragmentDolarOficial.newInstance("4");
-                case 3: return FragmentDolarOficial.newInstance("3");
-                case 2: return FragmentDolarOficial.newInstance("2");
-                case 1: return FragmentDolarOficial.newInstance("1");
-                case 0: return FragmentDolarOficial.newInstance("0");
-               // case 1: return  new FragmentCotizaciones();
-                //case 0: return  new FragmentWhatsapp();
-                default: return  new FragmentCotizaciones();
+
+            String fechaselccionada = fechaSelecdb;
+            String fechaAux;
+            SimpleDateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
+            Date datefechaSelecdb;
+
+            try {
+                datefechaSelecdb = formateadorBarra.parse(fechaselccionada);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
             }
+
+            Calendar calendarioAux = Calendar.getInstance();
+            calendarioAux.set(Calendar.DAY_OF_MONTH, datefechaSelecdb.getDate());
+            //Calendar calendarioAux = Calendar.getInstance();
+
+            switch (position) {
+                case 6:
+                    calendarioAux.add(Calendar.DAY_OF_YEAR, -6);
+                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
+                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
+                    return FragmentDolarOficial.newInstance("6", fecha, compra, venta);
+                case 5:
+                    calendarioAux.add(Calendar.DAY_OF_YEAR, -5);
+                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
+                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
+                    return FragmentDolarOficial.newInstance("5", fecha, compra, venta);
+                case 4:
+                    calendarioAux.add(Calendar.DAY_OF_YEAR, -4);
+                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
+                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
+                    return FragmentDolarOficial.newInstance("4", fecha, compra, venta);
+                case 3:
+                    calendarioAux.add(Calendar.DAY_OF_YEAR, -3);
+                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
+                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
+                    return FragmentDolarOficial.newInstance("3", fecha, compra, venta);
+                case 2:
+                    calendarioAux.add(Calendar.DAY_OF_YEAR, -2);
+                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
+                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
+                    return FragmentDolarOficial.newInstance("2", fecha, compra, venta);
+                case 1:
+                    calendarioAux.add(Calendar.DAY_OF_YEAR, -1);
+                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));;
+                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
+                    return FragmentDolarOficial.newInstance("1", fecha, compra, venta);
+                case 0:
+                    ItemMoneda(fechaselccionada, fechaHoyAux);
+                    fechaselccionada = (formateadorBarra.format(datefechaSelecdb.getTime()));
+                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaselccionada);
+                    return FragmentDolarOficial.newInstance("0", fecha, compra, venta);
+                // case 1: return  new FragmentCotizaciones();
+                //case 0: return  new FragmentWhatsapp();
+                default:
+                    return new FragmentCotizaciones();
+
+            }
+
         }
         @Override
         public int getItemCount() {
@@ -86,7 +135,6 @@ public class MainActivity extends AppCompatActivity{
         inflater.inflate(R.menu.menu_main,menu);
 
         itemMonedas = menu.findItem(R.id.menu_cotizaciones);
-
         return true;
     }
     @Override
@@ -94,6 +142,7 @@ public class MainActivity extends AppCompatActivity{
 
         switch (item.getItemId()){
             case R.id.menu_back:
+                System.exit(0);
                 Toast.makeText(MainActivity.this,"Retroceder",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_calendario:
@@ -106,17 +155,16 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(MainActivity.this,"abrir cotizaciones",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_whatsapp:
-                viewPager2.setCurrentItem(0);
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentWhatsapp()).commit();
                 Toast.makeText(MainActivity.this,"abrir whatsapp",Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return  super.onOptionsItemSelected(item);
         }
     }
-    ///
-    // calendario
+    /// calendario
     public void MostrarCalendario(){
-        String fechaHoy;
+
         Calendar calendario = Calendar.getInstance();
         int year = calendario.get(Calendar.YEAR);
         int month = calendario.get(Calendar.MONTH);
@@ -125,41 +173,41 @@ public class MainActivity extends AppCompatActivity{
         DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
         DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
 
+        fechaHoyAux = (formateadorBarra.format(calendario.getTime()));
         fechaHoy = (formateadorGuion.format(calendario.getTime()));
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                String fechaSelec,fechaSelecdb;
                 Date datefechaSelec,datefechaSelecdb;
+                String fechaAux;
 
-                fechaSelec = dayOfMonth + "-" + (month+1) + "-" + year;
+                fechaSelec = dayOfMonth + "-" + (month + 1) + "-" + year;
                 try {
                     datefechaSelec = formateadorGuion.parse(fechaSelec); //pasamos String a date para poder cambiarle el formato porq el string tiene un solo digito
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
-                fechaSelec= (formateadorGuion.format(datefechaSelec.getTime())); //cambiamos el formato de la fecha y lo ponemos en un string "dd-MM-yyyy"
+                fechaSelec = (formateadorGuion.format(datefechaSelec.getTime())); //cambiamos el formato de la fecha y lo ponemos en un string "dd-MM-yyyy"
 
-                fechaSelecdb= fechaSelec;
+                fechaSelecdb = fechaSelec;
                 try {
                     datefechaSelecdb = formateadorGuion.parse(fechaSelecdb);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
-                fechaSelecdb= (formateadorBarra.format(datefechaSelecdb.getTime()));
+                fechaSelecdb = (formateadorBarra.format(datefechaSelecdb.getTime()));
 
 
-                Toast.makeText(MainActivity.this,fechaSelec +"y "+ fechaSelecdb,Toast.LENGTH_SHORT).show();
-                if (!fechaSelec.equals(fechaHoy)){
-                    itemMonedas.setVisible(false);
-                }else{
-                    itemMonedas.setVisible(true);
-                }
+                //Toast.makeText(MainActivity.this,fechaSelecdb,Toast.LENGTH_SHORT).show();
+
 
                 ObtenerDatosEndPoint obtenerDatosEndPoint = new ObtenerDatosEndPoint();
-                String fechaMenosSieteDias= "01-01-2023";
+                String fechaMenosSieteDias= "01-03-2023";
                 obtenerDatosEndPoint.ObtenerDatosVolleyFechas(getApplicationContext(), fechaMenosSieteDias);
-                AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaSelecdb);
+
+
+                viewPager2.setAdapter(new AdaptadorFragment(getSupportFragmentManager(),getLifecycle()));
+
 
             }
         },year,month,dayOfMonth);
@@ -171,5 +219,16 @@ public class MainActivity extends AppCompatActivity{
 
         dialog.show();
     }
+    public void ItemMoneda(@NonNull String fechaSelec, String fechaHoy ){
+        if (!fechaSelec.equals(fechaHoyAux)){
+            itemMonedas.setEnabled(false);
+            itemMonedas.setVisible(false);
+        }else{
+            itemMonedas.setEnabled(true);
+            itemMonedas.setVisible(true);
+        }
+    }
+
+
 /////////////
 }

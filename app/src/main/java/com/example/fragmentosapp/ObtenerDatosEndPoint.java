@@ -46,6 +46,4 @@ public class ObtenerDatosEndPoint {
         queue.add(request);
     }
 
-
-
 }

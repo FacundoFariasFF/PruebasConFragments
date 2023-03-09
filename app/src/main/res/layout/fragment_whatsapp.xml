@@ -3,14 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fragmentotres"
+    android:background="@color/white"
     tools:context=".FragmentWhatsapp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/txt_fragment_whatsapp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Esto es Fragment Whatsapp" />
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txt_fragment_whatsapp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Esto es Fragment Whatsapp" />
+
+    </LinearLayout>
+
+
+
 
 </FrameLayout>

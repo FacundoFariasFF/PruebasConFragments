@@ -17,21 +17,25 @@ import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
 public class FragmentDolarOficial extends Fragment {
 
-    private String nroDiaFragment;
+    private String nroFragment, fecha, compra, venta;
     private TextView tvNroFragment, tvDia;
 
-    TextView tv_fecha,tv_compra,tv_venta;
+    static TextView tv_fecha;
+    static TextView tv_compra;
+    static TextView tv_venta;
 
-
-    String [] dias = {"lunes","martes","miercoles", "jueves","viernes", "sabado", "domingo"};
-    List<String> list = Arrays.asList(dias);
+    //static String fecha, compra, venta;
 
 
 
@@ -39,10 +43,13 @@ public class FragmentDolarOficial extends Fragment {
         // Required empty public constructor
     }
 
-    public static FragmentDolarOficial newInstance(String nroFragment){
+    public static FragmentDolarOficial newInstance(String nroFragment, String fecha, String compra, String venta){
         FragmentDolarOficial fragment = new FragmentDolarOficial();
         Bundle args = new Bundle();
         args.putString("nroFragment", nroFragment);
+        args.putString("fecha", fecha);
+        args.putString("compra", compra);
+        args.putString("venta", venta);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,7 +61,10 @@ public class FragmentDolarOficial extends Fragment {
 
 
         if (getArguments() != null) {
-            nroDiaFragment = getArguments().getString("nroFragment");
+            nroFragment = getArguments().getString("nroFragment");
+            fecha = getArguments().getString("fecha");
+            compra = getArguments().getString("compra");
+            venta = getArguments().getString("venta");
         }
 
     }
@@ -67,16 +77,74 @@ public class FragmentDolarOficial extends Fragment {
 
 
         tvNroFragment = rootView.findViewById(R.id.txt_fragmento_dolar_oficial);
-        tvNroFragment.setText("El nro de dia es "+nroDiaFragment);
+        tvNroFragment.setText("El nro de dia es "+nroFragment);
 
 
-        tvDia = rootView.findViewById(R.id.txt_fragmento_dia);
-        tvDia.setText(String.valueOf(list.get(Integer.parseInt(nroDiaFragment))));
 
 
         tv_fecha = rootView.findViewById(R.id.txt_fecha_oficial);
         tv_compra = rootView.findViewById(R.id.txt_compra_oficial);
         tv_venta = rootView.findViewById(R.id.txt_venta_ofical);
+
+        fecha = fecha;
+        compra=compra;
+        venta=venta;
+
+        if (fecha.equals("30/11/0002")||fecha.equals("29/11/0002")){
+            tv_fecha.setText("Fecha: No selecciono una fecha");
+        }else {
+            tv_fecha.setText("Fecha: "+fecha);
+        }
+        tv_compra.setText("Precio de Compra: "+compra);
+        tv_venta.setText("Precio de Venta: "+venta);
+
+        /*String fechaselccionada = MainActivity.fechaSelecdb;
+        String fechaAux = "00/00/0000";
+        DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
+        Date datefechaSelecdb;
+
+        try {
+            datefechaSelecdb = formateadorBarra.parse(fechaselccionada);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-1));
+
+        fechaselccionada= (formateadorBarra.format(datefechaSelecdb.getTime()));*/
+
+        /*if (!fechaselccionada.equals("00/00/0000") && !fechaselccionada.equals("30/11/0002")){
+
+            switch (nroFragment){
+                case "0":
+                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaselccionada);
+                    break;
+                case "1":
+                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-1));
+                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
+                    break;
+                case "2":
+                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-2));
+                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
+                    break;
+                case "3":
+                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-3));
+                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
+                    break;
+                case "4":
+                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-4));
+                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
+                    break;
+                case "5":
+                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-5));
+                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
+                    break;
+                case "6":
+                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-6));
+                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
+                    break;
+            }
+
+        }*/
 
 
 
@@ -88,13 +156,15 @@ public class FragmentDolarOficial extends Fragment {
     }
 
 
-    public void MostrarFecha(String fecha, String compra, String venta){
+    static void MostrarFecha(String fechadb, String compradb, String ventadb){
+
+        /*fecha = fechadb;
+        compra=compradb;
+        venta=ventadb;
 
         tv_fecha.setText("Fecha: "+fecha);
         tv_compra.setText("Precio de Compra: "+compra);
-        tv_venta.setText("Precio de Venta: "+venta);
-
-
+        tv_venta.setText("Precio de Venta: "+venta);*/
 
 
     }

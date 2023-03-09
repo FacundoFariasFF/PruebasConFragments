@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+
 
 //esta class administra la db
 public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
@@ -86,8 +88,10 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
                 compra = "No hay valores registrados" ;
                 venta = "No hay valores registrados";
             }
-            FragmentDolarOficial cotizacion = new FragmentDolarOficial();
-            cotizacion.MostrarFecha(fecha, compra, venta);
+
+            MainActivity.fecha = fecha;
+            MainActivity.compra = compra;
+            MainActivity.venta = venta;
 
             close();
         }
