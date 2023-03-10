@@ -31,10 +31,10 @@ public class FragmentCotizaciones extends Fragment {
     List<Monedas> monedasList;
     MonedasAdapter adapter;
 
-    private static final String ARG_PARAM1 = "param1";
+    /*private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
-    private String mParam2;
+    private String mParam2;*/
 
     public FragmentCotizaciones() {
         // Required empty public constructor

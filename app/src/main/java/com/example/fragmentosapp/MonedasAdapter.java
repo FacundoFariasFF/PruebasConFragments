@@ -34,6 +34,7 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Monedas monedas = monedasList.get(position);
+
         holder.nombre.setText(monedas.getNombre());
         holder.compra.setText("Precio de Compra: " +  monedas.getCompra());
         holder.venta.setText("Precio de Venta: " + monedas.getVenta());
