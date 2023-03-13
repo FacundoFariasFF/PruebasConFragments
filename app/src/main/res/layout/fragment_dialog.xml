@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/linearFragmentDialog">
+    <TextView
+        android:id="@+id/text_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="Seleccione la cotizacion que desea ver. "
+        android:textColor="#ff000000"
+        android:textSize="18sp" />
+
+
+    <!--
+    <TextView
+        android:id="@+id/text_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="Seleccione la cotizacion que desea ver. "
+        android:textColor="#ff000000"
+        android:textSize="18sp" />
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-16dp">
+
+    </ScrollView>
+    <CheckBox
+        android:id="@+id/checkBoxDolarOficial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "Dolar Oficial"
+        android:layout_marginTop="-16dp"
+        android:layout_marginStart="20dp"/>
+
+    <CheckBox
+        android:id="@+id/checkBoxDolarBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "Dolar Blue"
+        android:layout_marginTop="-16dp"
+        android:layout_marginStart="20dp"/>
+    <CheckBox
+        android:id="@+id/checkBoxDolarSoja"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "Dolar Soja"
+        android:layout_marginTop="-16dp"
+        android:layout_marginStart="20dp"/>
+    <CheckBox
+        android:id="@+id/checkBoxDolarCCLiqui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "Dolar Contado Con Liqui"
+        android:layout_marginTop="-16dp"
+        android:layout_marginStart="20dp"/>
+    <CheckBox
+        android:id="@+id/checkBoxDolarBolsa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "Dolar Bolsa"
+        android:layout_marginTop="-16dp"
+        android:layout_marginStart="20dp"/>
+    <CheckBox
+        android:id="@+id/checkBoxBitcoin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "Bitcoin"
+        android:layout_marginTop="-16dp"
+        android:layout_marginStart="20dp"/>
+    <CheckBox
+        android:id="@+id/checkBoxDolarTurista"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "Dolar Turista"
+        android:layout_marginTop="-16dp"
+        android:layout_marginStart="20dp"/>
+
+    <Button
+        android:id="@+id/btn_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="OK"
+        android:textColor="#ffffffff"
+        android:layout_marginStart="20dp"/> -->
+
+
+
+</LinearLayout>

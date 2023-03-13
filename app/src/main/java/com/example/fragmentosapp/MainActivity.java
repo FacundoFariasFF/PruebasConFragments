@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity{
             Calendar calendarioAux = Calendar.getInstance();
             calendarioAux.set(Calendar.DAY_OF_MONTH, datefechaSelecdb.getDate());
 
-
             switch (position) {
                 case 6:
                     calendarioAux.add(Calendar.DAY_OF_YEAR, -6);
@@ -153,6 +152,9 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(MainActivity.this,"abrir calendario",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_cotizaciones:
+                //DialogFragment dialogFragment = new DialogFragment();
+                //dialogFragment.show(getSupportFragmentManager(),"DialogFragment");
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentCotizaciones()).commit();
                 Toast.makeText(MainActivity.this,"abrir cotizaciones",Toast.LENGTH_SHORT).show();
                 return true;

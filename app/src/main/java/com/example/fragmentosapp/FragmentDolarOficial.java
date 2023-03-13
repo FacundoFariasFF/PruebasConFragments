@@ -80,8 +80,6 @@ public class FragmentDolarOficial extends Fragment {
         tvNroFragment.setText("El nro de dia es "+nroFragment);
 
 
-
-
         tv_fecha = rootView.findViewById(R.id.txt_fecha_oficial);
         tv_compra = rootView.findViewById(R.id.txt_compra_oficial);
         tv_venta = rootView.findViewById(R.id.txt_venta_ofical);
@@ -98,75 +96,7 @@ public class FragmentDolarOficial extends Fragment {
         tv_compra.setText("Precio de Compra: "+compra);
         tv_venta.setText("Precio de Venta: "+venta);
 
-        /*String fechaselccionada = MainActivity.fechaSelecdb;
-        String fechaAux = "00/00/0000";
-        DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
-        Date datefechaSelecdb;
-
-        try {
-            datefechaSelecdb = formateadorBarra.parse(fechaselccionada);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-1));
-
-        fechaselccionada= (formateadorBarra.format(datefechaSelecdb.getTime()));*/
-
-        /*if (!fechaselccionada.equals("00/00/0000") && !fechaselccionada.equals("30/11/0002")){
-
-            switch (nroFragment){
-                case "0":
-                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaselccionada);
-                    break;
-                case "1":
-                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-1));
-                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
-                    break;
-                case "2":
-                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-2));
-                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
-                    break;
-                case "3":
-                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-3));
-                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
-                    break;
-                case "4":
-                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-4));
-                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
-                    break;
-                case "5":
-                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-5));
-                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
-                    break;
-                case "6":
-                    fechaAux= (formateadorBarra.format(datefechaSelecdb.getTime()-6));
-                    AdminSQLiteOpenHelper.getInstance(getContext()).Buscar(fechaAux);
-                    break;
-            }
-
-        }*/
-
-
-
-        //String resultados = String.valueOf(list.get(6));
-       // txt_fragmentDolarOficial.setText(resultados);
-
 
         return rootView;
     }
-
-
-    static void MostrarFecha(String fechadb, String compradb, String ventadb){
-
-        /*fecha = fechadb;
-        compra=compradb;
-        venta=ventadb;
-
-        tv_fecha.setText("Fecha: "+fecha);
-        tv_compra.setText("Precio de Compra: "+compra);
-        tv_venta.setText("Precio de Venta: "+venta);*/
-
-
-    }
-
 }

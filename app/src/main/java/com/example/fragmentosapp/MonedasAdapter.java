@@ -15,10 +15,12 @@ import java.util.List;
 
 
 public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ViewHolder>{
+
     Context context;
     List<Monedas> monedasList;
 
     public MonedasAdapter(Context context, List<Monedas>monedasList){
+        setHasStableIds(true);
         this.context = context;
         this.monedasList = monedasList;
     }
@@ -66,12 +68,14 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ViewHold
         return monedasList.size();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView nombre,compra,venta,variacion;
         CardView cardView;
         ImageView imageView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             nombre = itemView.findViewById(R.id.txt_nombre);
             compra = itemView.findViewById(R.id.txt_compra);
             venta = itemView.findViewById(R.id.txt_venta);
