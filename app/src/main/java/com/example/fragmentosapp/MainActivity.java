@@ -32,13 +32,22 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 
 public class MainActivity extends AppCompatActivity{
-    private ViewPager2 viewPager2;
+
+    private ViewPager2 viewPager;
+
+    private FragmentStateAdapter pagerAdapter;
+
+    static ArrayList<DolarOficial> historicos = new ArrayList();
+
     MenuItem itemMonedas;
 
     static String fechaSelec,fechaSelecdb = "00/00/0000";
@@ -51,85 +60,18 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewPager2 = findViewById(R.id.viewpager2);
 
+        ObtenerDatosEndPoint obtenerDatosEndPoint = new ObtenerDatosEndPoint();
+        String fechaMenosSieteDias= "01-03-2023";
+        obtenerDatosEndPoint.ObtenerDatosVolleyFechas(getApplicationContext(), fechaMenosSieteDias);
+
+        AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar();
+
+        viewPager = findViewById(R.id.viewpager2);
+        pagerAdapter = new PagerAdapterDolar(this,historicos);
+        viewPager.setAdapter(pagerAdapter);
 
     }
-    ////
-    class AdaptadorFragment extends FragmentStateAdapter {
-
-        //constructor de fragments
-        public AdaptadorFragment(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
-            super(fragmentManager, lifecycle);
-        }
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            String fechaselccionada = fechaSelecdb;
-            String fechaAux;
-            SimpleDateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
-
-            Date datefechaSelecdb;
-            try {
-                datefechaSelecdb = formateadorBarra.parse(fechaselccionada);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-            Calendar calendarioAux = Calendar.getInstance();
-            calendarioAux.set(Calendar.DAY_OF_MONTH, datefechaSelecdb.getDate());
-
-            switch (position) {
-                case 6:
-                    calendarioAux.add(Calendar.DAY_OF_YEAR, -6);
-                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
-                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
-                    ItemMoneda(fechaAux, fechaHoyAux);
-                    return FragmentDolarOficial.newInstance("6", fecha, compra, venta);
-                case 5:
-                    calendarioAux.add(Calendar.DAY_OF_YEAR, -5);
-                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
-                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
-                    ItemMoneda(fechaAux, fechaHoyAux);
-                    return FragmentDolarOficial.newInstance("5", fecha, compra, venta);
-                case 4:
-                    calendarioAux.add(Calendar.DAY_OF_YEAR, -4);
-                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
-                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
-                    ItemMoneda(fechaAux, fechaHoyAux);
-                    return FragmentDolarOficial.newInstance("4", fecha, compra, venta);
-                case 3:
-                    calendarioAux.add(Calendar.DAY_OF_YEAR, -3);
-                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
-                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
-                    ItemMoneda(fechaAux, fechaHoyAux);
-                    return FragmentDolarOficial.newInstance("3", fecha, compra, venta);
-                case 2:
-                    calendarioAux.add(Calendar.DAY_OF_YEAR, -2);
-                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));
-                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
-                    ItemMoneda(fechaAux, fechaHoyAux);
-                    return FragmentDolarOficial.newInstance("2", fecha, compra, venta);
-                case 1:
-                    calendarioAux.add(Calendar.DAY_OF_YEAR, -1);
-                    fechaAux= (formateadorBarra.format(calendarioAux.getTime()));;
-                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaAux);
-                    ItemMoneda(fechaAux, fechaHoyAux);
-                    return FragmentDolarOficial.newInstance("1", fecha, compra, venta);
-                case 0:
-                    ItemMoneda(fechaselccionada, fechaHoyAux);
-                    fechaselccionada = (formateadorBarra.format(datefechaSelecdb.getTime()));
-                    AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaselccionada);
-                    return FragmentDolarOficial.newInstance("0", fecha, compra, venta);
-                default:
-                    return new FragmentCotizaciones();
-            }
-        }
-        @Override
-        public int getItemCount() {
-            return 7;
-        }
-    }
-
     //// menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -203,7 +145,7 @@ public class MainActivity extends AppCompatActivity{
                 ObtenerDatosEndPoint obtenerDatosEndPoint = new ObtenerDatosEndPoint();
                 String fechaMenosSieteDias= "01-03-2023";
                 obtenerDatosEndPoint.ObtenerDatosVolleyFechas(getApplicationContext(), fechaMenosSieteDias);
-                viewPager2.setAdapter(new AdaptadorFragment(getSupportFragmentManager(),getLifecycle()));
+                //viewPager2.setAdapter(new AdaptadorFragment(getSupportFragmentManager(),getLifecycle()));
 
             }
         },year,month,dayOfMonth);
@@ -224,7 +166,6 @@ public class MainActivity extends AppCompatActivity{
             itemMonedas.setVisible(true);
         }
     }
-
 
 /////////////
 }

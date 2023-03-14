@@ -1,0 +1,40 @@
+package com.example.fragmentosapp;
+
+public class DolarOficial {
+    private String dolarFecha;
+    private String dolarCompra;
+    private String dolarVenta;
+
+
+    public DolarOficial(String dolarFecha, String dolarCompra, String dolarVenta){
+        this.dolarFecha = dolarFecha;
+        this.dolarCompra = dolarCompra;
+        this.dolarVenta = dolarVenta;
+    }
+
+
+    public String getDolarFecha() {
+        return dolarFecha;
+    }
+
+    public void setDolarFecha(String dolarFecha) {
+        this.dolarFecha = dolarFecha;
+    }
+
+    public String getDolarCompra() {
+        return dolarCompra;
+    }
+
+    public void setDolarCompra(String dolarCompra) {
+        this.dolarCompra = dolarCompra;
+    }
+
+    public String getDolarVenta() {
+        return dolarVenta;
+    }
+
+    public void setDolarVenta(String dolarVenta) {
+        this.dolarVenta = dolarVenta;
+    }
+}
+

@@ -138,7 +138,6 @@ public class FragmentCotizaciones extends Fragment {
                     }
                 }
 
-
                 /*for (int i=0;i<response.length()-2;i++){
                     JSONObject mJsonObject =  response.getJSONObject(1);
                     JSONObject mJsonObject2 =  mJsonObject.getJSONObject("casa");

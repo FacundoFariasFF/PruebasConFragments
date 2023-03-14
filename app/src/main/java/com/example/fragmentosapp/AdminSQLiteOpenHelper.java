@@ -1,5 +1,7 @@
 package com.example.fragmentosapp;
 
+import static com.example.fragmentosapp.MainActivity.historicos;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,11 +10,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 
 //esta class administra la db
 public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
+
+
 
 
     private static AdminSQLiteOpenHelper instance;
@@ -68,33 +74,33 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
         close();
     }
 
-    public void Buscar(String db_fecha_cal) {
+    //public void Buscar(String db_fecha_cal) {
+    public void Buscar() {
 
         String fecha;
         String compra;
         String venta;
         //creamos una validacion para que no este el campo fecha vacio
-        if (!db_fecha_cal.isEmpty()) {
-            open();
-            Cursor fila = BaseDeDatos.rawQuery("SELECT compra, venta FROM historico WHERE fecha='" + db_fecha_cal + "'", null);
+        open();
+        Cursor fila = BaseDeDatos.rawQuery("SELECT fecha, compra, venta FROM historico", null);
 
-            // lo siguiente retorna true si encuentra datos dentro de la "tabla" y los muestra en pantalla
-            if (fila.moveToFirst()) {
-                fecha = (db_fecha_cal);
-                compra = (fila.getString(0));
-                venta = (fila.getString(1));
-            } else {
-                fecha = (db_fecha_cal);
-                compra = "No hay valores registrados" ;
-                venta = "No hay valores registrados";
-            }
+        DolarOficial dolar;
 
-            MainActivity.fecha = fecha;
-            MainActivity.compra = compra;
-            MainActivity.venta = venta;
-
-            close();
+        // lo siguiente retorna true si encuentra datos dentro de la "tabla" y los muestra en pantalla
+        if (fila.moveToFirst()) {
+            do{
+                fecha = (fila.getString(0));
+                compra = (fila.getString(1));
+                venta = (fila.getString(2));
+                dolar = new DolarOficial(fecha,compra,venta);
+                MainActivity.historicos.add(dolar);
+            }while (fila.moveToNext());
+        } else {
+            //fecha = (db_fecha_cal);
+            compra = "No hay valores registrados" ;
+            venta = "No hay valores registrados";
         }
+        close();
     }
 
 }
