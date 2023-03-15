@@ -46,13 +46,14 @@ public class MainActivity extends AppCompatActivity{
 
     private FragmentStateAdapter pagerAdapter;
 
+    //static ArrayList<DolarOficial> historicos = new ArrayList();
     static ArrayList<DolarOficial> historicos = new ArrayList();
 
     MenuItem itemMonedas;
 
     static String fechaSelec,fechaSelecdb = "00/00/0000";
-    String fechaHoy,fechaHoyAux;
-    static String fecha,compra,venta;
+    String fechaHoy;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
 
-        ObtenerDatosEndPoint obtenerDatosEndPoint = new ObtenerDatosEndPoint();
+       /* ObtenerDatosEndPoint obtenerDatosEndPoint = new ObtenerDatosEndPoint();
         String fechaMenosSieteDias= "01-03-2023";
         obtenerDatosEndPoint.ObtenerDatosVolleyFechas(getApplicationContext(), fechaMenosSieteDias);
 
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity{
 
         viewPager = findViewById(R.id.viewpager2);
         pagerAdapter = new PagerAdapterDolar(this,historicos);
-        viewPager.setAdapter(pagerAdapter);
+        viewPager.setAdapter(pagerAdapter);*/
 
     }
     //// menu
@@ -94,9 +95,6 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(MainActivity.this,"abrir calendario",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_cotizaciones:
-                //DialogFragment dialogFragment = new DialogFragment();
-                //dialogFragment.show(getSupportFragmentManager(),"DialogFragment");
-
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentCotizaciones()).commit();
                 Toast.makeText(MainActivity.this,"abrir cotizaciones",Toast.LENGTH_SHORT).show();
                 return true;
@@ -119,7 +117,6 @@ public class MainActivity extends AppCompatActivity{
         DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
         DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
 
-        fechaHoyAux = (formateadorBarra.format(calendario.getTime()));
         fechaHoy = (formateadorGuion.format(calendario.getTime()));
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -133,6 +130,7 @@ public class MainActivity extends AppCompatActivity{
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
+
                 fechaSelec = (formateadorGuion.format(datefechaSelec.getTime())); //cambiamos el formato de la fecha y lo ponemos en un string "dd-MM-yyyy"
                 fechaSelecdb = fechaSelec;
                 try {
@@ -142,23 +140,49 @@ public class MainActivity extends AppCompatActivity{
                 }
                 fechaSelecdb = (formateadorBarra.format(datefechaSelecdb.getTime()));
 
+                //Calendar calendarioAux= Calendar.getInstance(TimeZone.getTimeZone(fechaSelec));
+                Calendar calendarioAux= Calendar.getInstance();
+                calendarioAux.setTime(datefechaSelec);
+                calendarioAux.add(Calendar.DAY_OF_YEAR, -7);
+                String fechaMenosSieteDias= (formateadorGuion.format(calendarioAux.getTime()));
+
+                calendarioAux= Calendar.getInstance();
+                calendarioAux.setTime(datefechaSelec);
+                calendarioAux.add(Calendar.DAY_OF_YEAR, +1);
+                String fechaMasUnDia= (formateadorGuion.format(calendarioAux.getTime()));
+
+
+                //fechaSelec 01-01-2023 //fechaSelecdb 01/01/2023
+
+                historicos.clear();
+                //AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Eliminar();
+
                 ObtenerDatosEndPoint obtenerDatosEndPoint = new ObtenerDatosEndPoint();
-                String fechaMenosSieteDias= "01-03-2023";
-                obtenerDatosEndPoint.ObtenerDatosVolleyFechas(getApplicationContext(), fechaMenosSieteDias);
-                //viewPager2.setAdapter(new AdaptadorFragment(getSupportFragmentManager(),getLifecycle()));
+                obtenerDatosEndPoint.ObtenerDatosVolleyFechas(getApplicationContext(), fechaMenosSieteDias,fechaMasUnDia );
+
+
+                historicos = AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaSelecdb);
+
+
+                viewPager = findViewById(R.id.viewpager2);
+                pagerAdapter = new PagerAdapterDolar(MainActivity.this,historicos);
+                viewPager.setAdapter(pagerAdapter);
+
 
             }
         },year,month,dayOfMonth);
-        calendario.set(2023, 2, 1);//Year,Mounth -1,Day
-        //calendario.set(2002, 3, 9);//Year,Mounth -1,Day
+        //calendario.set(2023, 2, 1);//Year,Mounth -1,Day
+        calendario.set(2002, 3, 9);//Year,Mounth -1,Day
         dialog.getDatePicker().setMinDate(calendario.getTimeInMillis());
         calendario.set(year,month,dayOfMonth);
         dialog.getDatePicker().setMaxDate(calendario.getTimeInMillis());
 
         dialog.show();
+
     }
+
     public void ItemMoneda(@NonNull String fechaSelec, String fechaHoy ){
-        if (!fechaSelec.equals(fechaHoyAux)){
+        if (!fechaSelec.equals(fechaHoy)){
             itemMonedas.setEnabled(false);
             itemMonedas.setVisible(false);
         }else{

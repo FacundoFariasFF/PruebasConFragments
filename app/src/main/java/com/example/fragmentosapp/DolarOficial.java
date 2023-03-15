@@ -1,7 +1,7 @@
 package com.example.fragmentosapp;
 
 public class DolarOficial {
-    private String dolarFecha;
+    private String dolarFecha; // hacerlo date para comparar
     private String dolarCompra;
     private String dolarVenta;
 

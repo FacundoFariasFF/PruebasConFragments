@@ -15,14 +15,15 @@ import org.json.JSONException;
 
 public class ObtenerDatosEndPoint {
     private RequestQueue queue;
-    public void ObtenerDatosVolleyFechas(Context context, String fechaMenosSieteDias){
+    public void ObtenerDatosVolleyFechas(Context context, String fechaMenosSieteDias, String fechaMasUnDia){
         queue = Volley.newRequestQueue(context);
         //al final del url se puede modificar la fecha para obtener menos rango de datos
         // Ejemplo: (https://mercados.ambito.com//dolar/formal/historico-general/03-01-2023/06-01-2023)
 
         String fechaMin= fechaMenosSieteDias;
+        String fechaMax = fechaMasUnDia;
         //String fechaMin= "01-01-2023";
-        String fechaMax = "01-01-2030";
+        //String fechaMax = "01-01-2030";
         String url = "https://mercados.ambito.com//dolar/formal/historico-general/"+fechaMin+"/"+fechaMax;
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
             try {
