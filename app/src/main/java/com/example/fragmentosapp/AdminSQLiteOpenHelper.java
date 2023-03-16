@@ -65,7 +65,22 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
         BaseDeDatos.close();
     }
 
-    public void Registrar(String dbfecha, String dbcompra, String dbventa) {
+    public void Registrar(ArrayList<DolarOficial> cotizaciones) {
+    //public void Registrar(String dbfecha, String dbcompra, String dbventa) {
+        open();
+        // registramos en la db los campos fecha,compra y venta
+        for (int i=0; i<cotizaciones.size();i++){
+            ContentValues registro = new ContentValues();
+            registro.put("fecha", String.valueOf(cotizaciones.get(i).getDolarFecha()));
+            registro.put("compra", String.valueOf(cotizaciones.get(i).getDolarCompra()));
+            registro.put("venta", String.valueOf(cotizaciones.get(i).getDolarVenta()));
+            BaseDeDatos.insert("historico", null, registro);
+        }
+        // los insertamos en la "tabla"
+
+        close();
+    }
+    /*public void Registrar(String dbfecha, String dbcompra, String dbventa) {
         open();
         ContentValues registro = new ContentValues();
         // registramos en la db los campos fecha,compra y venta
@@ -75,7 +90,7 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
         // los insertamos en la "tabla"
         BaseDeDatos.insert("historico", null, registro);
         close();
-    }
+    }*/
 
     public ArrayList<DolarOficial> Buscar(String db_fecha_cal) {
         //public void Buscar() {

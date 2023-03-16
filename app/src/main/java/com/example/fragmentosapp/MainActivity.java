@@ -24,7 +24,14 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.tabs.TabLayout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -46,7 +53,6 @@ public class MainActivity extends AppCompatActivity{
 
     private FragmentStateAdapter pagerAdapter;
 
-    //static ArrayList<DolarOficial> historicos = new ArrayList();
     static ArrayList<DolarOficial> historicos = new ArrayList();
 
     MenuItem itemMonedas;
@@ -155,19 +161,62 @@ public class MainActivity extends AppCompatActivity{
                 //fechaSelec 01-01-2023 //fechaSelecdb 01/01/2023
 
                 historicos.clear();
-                //AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Eliminar();
-
-                ObtenerDatosEndPoint obtenerDatosEndPoint = new ObtenerDatosEndPoint();
-                obtenerDatosEndPoint.ObtenerDatosVolleyFechas(getApplicationContext(), fechaMenosSieteDias,fechaMasUnDia );
+                AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Eliminar();
 
 
-                historicos = AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaSelecdb);
+// Obtener Datos Del EndPoint
+
+                ArrayList<DolarOficial> cotizacionesEndPoint = new ArrayList();
+                RequestQueue queue;
+                queue = Volley.newRequestQueue(getApplicationContext());
+                //al final del url se puede modificar la fecha para obtener menos rango de datos
+                // Ejemplo: (https://mercados.ambito.com//dolar/formal/historico-general/03-01-2023/06-01-2023)
+
+                String fechaMin= fechaMenosSieteDias;
+                String fechaMax = fechaMasUnDia;
+                //String fechaMin= "01-01-2023";
+                //String fechaMax = "01-01-2030";
+                String url = "https://mercados.ambito.com//dolar/formal/historico-general/"+fechaMin+"/"+fechaMax;
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+                    try {
+                        DolarOficial cotizaciones;
+                        String fecha ;
+                        String compra;
+                        String venta;
+                        for (int i = 1; i<response.length(); i++){
+                            JSONArray mJsonArray = response.getJSONArray(i);
+                            fecha = mJsonArray.getString(0);
+                            compra = mJsonArray.getString(1);
+                            venta = mJsonArray.getString(2);
+                            //recorremos el JSON y enviamos los datos al ArrayList cotizaciones para luego cargar la Base de Datos.
+                            //AdminSQLiteOpenHelper.getInstance(context).Registrar(fecha,compra,venta);
+                            cotizaciones = new DolarOficial(fecha,compra,venta);
+                            cotizacionesEndPoint.add(cotizaciones);
+                        }
+                        ///
+                        AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Registrar(cotizacionesEndPoint);
+                        historicos = AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaSelecdb);
+
+                        viewPager = findViewById(R.id.viewpager2);
+                        pagerAdapter = new PagerAdapterDolar(MainActivity.this,historicos);
+                        viewPager.setAdapter(pagerAdapter);
+                        ///
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> {
+                });
+                queue.add(request);
+
+// Fin Obtencion Datos del EndPoitn
 
 
-                viewPager = findViewById(R.id.viewpager2);
+                //historicos = AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaSelecdb);
+
+
+                /*viewPager = findViewById(R.id.viewpager2);
                 pagerAdapter = new PagerAdapterDolar(MainActivity.this,historicos);
-                viewPager.setAdapter(pagerAdapter);
-
+                viewPager.setAdapter(pagerAdapter);*/
 
             }
         },year,month,dayOfMonth);
