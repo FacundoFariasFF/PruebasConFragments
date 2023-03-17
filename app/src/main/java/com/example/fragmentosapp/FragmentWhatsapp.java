@@ -51,9 +51,17 @@ public class FragmentWhatsapp extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_whatsapp, container, false);
 
-        Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("whatsapp://send?phone=" + contact));
+        /*Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("whatsapp://send?phone=" + contact));
         sendIntent.setPackage("com.whatsapp");
-        startActivity(sendIntent);
+        startActivity(sendIntent);*/
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
 
 
         return rootView;
