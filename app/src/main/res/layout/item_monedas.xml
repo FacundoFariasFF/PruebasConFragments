@@ -10,35 +10,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="#FF9EADFB"
-        app:cardCornerRadius="100dp"
+        app:cardCornerRadius="50dp"
         app:cardElevation="8dp"
-        android:layout_margin="10dp">
-
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="70dp"
+        android:layout_gravity="center">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="4dp"
             android:background="#220D49">
+
             <ImageView
                 android:id="@+id/imagen_nombre"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:padding="10dp"
+                android:layout_width="200dp"
+                android:layout_height="170dp"
                 android:layout_gravity="center"
+                android:padding="10dp"
                 android:src="@drawable/dolar" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_gravity="center">
-
+                android:layout_gravity="center"
+                android:layout_margin="10dp">
 
                 <TextView
                     android:id="@+id/txt_nombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
@@ -47,6 +51,7 @@
                     android:id="@+id/txt_compra"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
@@ -55,14 +60,15 @@
                     android:id="@+id/txt_venta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
-
                 <TextView
                     android:id="@+id/txt_variacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />

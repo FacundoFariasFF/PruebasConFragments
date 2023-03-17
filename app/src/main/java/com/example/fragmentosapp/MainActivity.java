@@ -165,7 +165,6 @@ public class MainActivity extends AppCompatActivity{
 
 
 // Obtener Datos Del EndPoint
-
                 ArrayList<DolarOficial> cotizacionesEndPoint = new ArrayList();
                 RequestQueue queue;
                 queue = Volley.newRequestQueue(getApplicationContext());
@@ -183,18 +182,19 @@ public class MainActivity extends AppCompatActivity{
                         String fecha ;
                         String compra;
                         String venta;
-                        for (int i = 1; i<response.length(); i++){
+                        for (int i = 1; i<response.length(); i++) {
                             JSONArray mJsonArray = response.getJSONArray(i);
                             fecha = mJsonArray.getString(0);
                             compra = mJsonArray.getString(1);
                             venta = mJsonArray.getString(2);
+
                             //recorremos el JSON y enviamos los datos al ArrayList cotizaciones para luego cargar la Base de Datos.
                             //AdminSQLiteOpenHelper.getInstance(context).Registrar(fecha,compra,venta);
                             cotizaciones = new DolarOficial(fecha,compra,venta);
                             cotizacionesEndPoint.add(cotizaciones);
                         }
                         ///
-                        AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Registrar(cotizacionesEndPoint);
+                        AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Registrar(cotizacionesEndPoint,datefechaSelecdb);
                         historicos = AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaSelecdb);
 
                         viewPager = findViewById(R.id.viewpager2);
@@ -208,15 +208,7 @@ public class MainActivity extends AppCompatActivity{
                 });
                 queue.add(request);
 
-// Fin Obtencion Datos del EndPoitn
-
-
-                //historicos = AdminSQLiteOpenHelper.getInstance(getApplicationContext()).Buscar(fechaSelecdb);
-
-
-                /*viewPager = findViewById(R.id.viewpager2);
-                pagerAdapter = new PagerAdapterDolar(MainActivity.this,historicos);
-                viewPager.setAdapter(pagerAdapter);*/
+// Fin Obtencion Datos del EndPoint
 
             }
         },year,month,dayOfMonth);

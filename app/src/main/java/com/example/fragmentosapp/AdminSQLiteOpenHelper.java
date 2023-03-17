@@ -1,7 +1,5 @@
 package com.example.fragmentosapp;
 
-import static com.example.fragmentosapp.MainActivity.historicos;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,13 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 
 //esta class administra la db
@@ -65,33 +62,54 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
         BaseDeDatos.close();
     }
 
-    public void Registrar(ArrayList<DolarOficial> cotizaciones) {
-    //public void Registrar(String dbfecha, String dbcompra, String dbventa) {
+    public void Registrar(ArrayList<DolarOficial> cotizaciones, Date datefechaSelecdb) {
+        String fecha="", compra="", venta="", fechaAux,fechaMenosDias;
+        Date dateFechaMenosDias,datefechaEndpoint;
+        int cantDias =0;
+        DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar calendarioAux= Calendar.getInstance();
         open();
-        // registramos en la db los campos fecha,compra y venta
-        for (int i=0; i<cotizaciones.size();i++){
-            ContentValues registro = new ContentValues();
-            registro.put("fecha", String.valueOf(cotizaciones.get(i).getDolarFecha()));
-            registro.put("compra", String.valueOf(cotizaciones.get(i).getDolarCompra()));
-            registro.put("venta", String.valueOf(cotizaciones.get(i).getDolarVenta()));
-            BaseDeDatos.insert("historico", null, registro);
-        }
-        // los insertamos en la "tabla"
+            for (int j=0; j<cotizaciones.size();j++) {
+                fechaAux = String.valueOf(cotizaciones.get(j).getDolarFecha()); // obtenemos la primer fecha del endpoint
+                try {
+                    datefechaEndpoint = formateadorBarra.parse(fechaAux); // convertimos la primer fecha del enpoint a date
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                calendarioAux.setTime(datefechaSelecdb);      // seteamos al calendario la fecha seleccionada
+                calendarioAux.add(Calendar.DAY_OF_YEAR, -cantDias); //le restamos x dias (para ir comparando luego)
+                fechaMenosDias= (formateadorBarra.format(calendarioAux.getTime())); //pasamos el calendario a string
+                try {
+                    dateFechaMenosDias = formateadorBarra.parse(fechaMenosDias); //pasamos de string a date(con formato correcto)la fecha menos x dias
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
 
+                if (datefechaEndpoint.equals(datefechaSelecdb)) { //si la fecha del endpoint es igual a la seleccionada por el usuario
+                    fecha = String.valueOf(cotizaciones.get(j).getDolarFecha());
+                    compra = String.valueOf(cotizaciones.get(j).getDolarCompra());
+                    venta = String.valueOf(cotizaciones.get(j).getDolarVenta());
+                } else {
+                    if (datefechaEndpoint.equals(dateFechaMenosDias)) { //si la fecha del endpoint es igual a la fecha anterior de la seleccionada
+                        fecha = String.valueOf(cotizaciones.get(j).getDolarFecha());
+                        compra = String.valueOf(cotizaciones.get(j).getDolarCompra());
+                        venta = String.valueOf(cotizaciones.get(j).getDolarVenta());
+                    } else {
+                        fecha = fechaMenosDias;
+                        compra = "No hay valores registrados.";
+                        venta = "No hay valores registrados.";
+                        j=j-1;
+                    }
+                }
+                cantDias++; //cant dias es el numero de dias que se resta a la fecha seleccionada por el usuario
+                ContentValues registro = new ContentValues();
+                registro.put("fecha", fecha);
+                registro.put("compra", compra);
+                registro.put("venta", venta);
+                BaseDeDatos.insert("historico", null, registro);
+            }
         close();
     }
-    /*public void Registrar(String dbfecha, String dbcompra, String dbventa) {
-        open();
-        ContentValues registro = new ContentValues();
-        // registramos en la db los campos fecha,compra y venta
-        registro.put("fecha", dbfecha);
-        registro.put("compra", dbcompra);
-        registro.put("venta", dbventa);
-        // los insertamos en la "tabla"
-        BaseDeDatos.insert("historico", null, registro);
-        close();
-    }*/
-
     public ArrayList<DolarOficial> Buscar(String db_fecha_cal) {
         //public void Buscar() {
         String fecha;
@@ -113,6 +131,7 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 
         if (fila.moveToFirst()) {
             fechadb=(fila.getString(0));
+
             try {
                 datefechadb = formateadorBarra.parse(fechadb);
             } catch (ParseException e) {
@@ -124,12 +143,11 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
                 throw new RuntimeException(e);
             }
             do {
-
-                //if ((fila.getString(0)).equals(db_fecha_cal)) {
                 if (datefechadb.equals(datefechaSelec)) {
                     fecha = (fila.getString(0));
                     compra = (fila.getString(1));
                     venta = (fila.getString(2));
+
                     dolar = new DolarOficial(fecha,compra,venta);
                     historicos.add(dolar);
                 }
