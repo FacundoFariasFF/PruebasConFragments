@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="150dp"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
@@ -19,8 +20,9 @@
             app:cardBackgroundColor="#FF9EADFB"
             app:cardCornerRadius="50dp"
             app:cardElevation="8dp"
-            android:layout_marginVertical="150dp"
+            android:layout_marginTop="10dp"
             android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center">
 
             <LinearLayout

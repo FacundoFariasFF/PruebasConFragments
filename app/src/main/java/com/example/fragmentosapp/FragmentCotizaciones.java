@@ -38,6 +38,7 @@ public class FragmentCotizaciones extends Fragment {
     RecyclerView recyclerView;
     List<Monedas> monedasList;
     MonedasAdapter adapter;
+    int opcion;
 
     /*private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -48,11 +49,10 @@ public class FragmentCotizaciones extends Fragment {
         // Required empty public constructor
     }
 
-    public static FragmentCotizaciones newInstance(String param1, String param2) {
+    public static FragmentCotizaciones newInstance(int opcion) {
         FragmentCotizaciones fragment = new FragmentCotizaciones();
         Bundle args = new Bundle();
-        /*args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);*/
+        args.putInt("opcion", opcion);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,10 +60,10 @@ public class FragmentCotizaciones extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
+        if (getArguments() != null) {
+            opcion = getArguments().getInt("opcion");
+            checks[opcion]=true;
+        }
     }
 
     @Override
@@ -84,18 +84,19 @@ public class FragmentCotizaciones extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        ///
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //builder.setTitle("Seleccionar Monedas");
-        View selector= getLayoutInflater().inflate(R.layout.fragment_dialog,null);
-        tvDialog = selector.findViewById(R.id.text_dialog);
-        builder.setView(selector);
-        String []monedas={"Dolar Oficial","Dolar Blue","Dolar Soja","Dolar Contado Con liqui","Dolar Bolsa",
-                "Bitcoin","Dolar Turista"};
-        //boolean[] checks = new boolean[7];
-        builder.setMultiChoiceItems(monedas, checks, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+        if (checks[0]==false) {
+            ///
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            //builder.setTitle("Seleccionar Monedas");
+            View selector = getLayoutInflater().inflate(R.layout.fragment_dialog, null);
+            tvDialog = selector.findViewById(R.id.text_dialog);
+            builder.setView(selector);
+            String[] monedas = {"Dolar Oficial", "Dolar Blue", "Dolar Soja", "Dolar Contado Con liqui", "Dolar Bolsa",
+                    "Bitcoin", "Dolar Turista"};
+            //boolean[] checks = new boolean[7];
+            builder.setMultiChoiceItems(monedas, checks, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                 /*String todo = "";
                 for (int i=0;i<checks.length;i++){
                     if (checks[i]){
@@ -103,16 +104,16 @@ public class FragmentCotizaciones extends Fragment {
                     }
                 }
                 tvDialog.setText(todo);*/
-            }
-        });
-
-        builder.setPositiveButton("confirmar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ObtenerDatosVolleyMonedas();
-            }
-        });
-        builder.create().show();
+                }
+            });
+            builder.setPositiveButton("confirmar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ObtenerDatosVolleyMonedas();
+                }
+            });
+            builder.create().show();
+        }else {ObtenerDatosVolleyMonedas();}
         ///
         return rootView;
     }

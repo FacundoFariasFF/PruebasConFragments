@@ -6,14 +6,11 @@
     android:background="@color/white"
     tools:context=".FragmentCotizaciones">
 
-    <LinearLayout
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:layoutDirection="rtl"/>
 
 </FrameLayout>
