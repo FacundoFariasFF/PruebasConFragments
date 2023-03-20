@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     MenuItem itemMonedas;
-
+    boolean[] opciones = new boolean[7];
 
 
 
@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, FragmentCotizaciones.newInstance(0)).commit();
+        opciones[0]=true;
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, FragmentCotizaciones.newInstance(opciones)).commit();
 
        /* ObtenerDatosEndPoint obtenerDatosEndPoint = new ObtenerDatosEndPoint();
         String fechaMenosSieteDias= "01-03-2023";
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(MainActivity.this,"abrir calendario",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_cotizaciones:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentCotizaciones()).commit();
+                Monedas();
                 Toast.makeText(MainActivity.this,"abrir cotizaciones",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_whatsapp:
@@ -110,9 +110,20 @@ public class MainActivity extends AppCompatActivity{
                 return  super.onOptionsItemSelected(item);
         }
     }
-    ////
-
-    /// calendario
+    //// Dialog fragment cotizaciones de monedas
+    public void Monedas(){
+        DialogFragment dialogo = new DialogFragment();
+        dialogo.show(getSupportFragmentManager(), "dialogo");
+        dialogo.ProcesarRespuesta(new DialogFragment.Respuestas() {
+            @Override
+            public void confirmar(DialogFragment dialog) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, FragmentCotizaciones.newInstance(dialogo.checks)).commit();
+            }
+            @Override
+            public void cancelar(DialogFragment dialog) {
+            }
+        });
+    }
 
 
     public void ItemMoneda(@NonNull String fechaSelec, String fechaHoy ){

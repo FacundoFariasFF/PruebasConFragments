@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -34,25 +35,23 @@ public class FragmentCotizaciones extends Fragment {
     boolean[] checks = new boolean[7];
     TextView tvDialog;
 
-    private RequestQueue queue;
+    private static RequestQueue queue;
     RecyclerView recyclerView;
     List<Monedas> monedasList;
     MonedasAdapter adapter;
-    int opcion;
+    boolean[] opcion;
 
-    /*private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;*/
+
 
     public FragmentCotizaciones() {
         // Required empty public constructor
     }
 
-    public static FragmentCotizaciones newInstance(int opcion) {
+
+    public static FragmentCotizaciones newInstance(boolean[] opcion) {
         FragmentCotizaciones fragment = new FragmentCotizaciones();
         Bundle args = new Bundle();
-        args.putInt("opcion", opcion);
+        args.putBooleanArray("opcion", opcion);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,8 +60,8 @@ public class FragmentCotizaciones extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            opcion = getArguments().getInt("opcion");
-            checks[opcion]=true;
+            opcion = getArguments().getBooleanArray("opcion");
+            //opcion[0]=true;
         }
     }
 
@@ -84,26 +83,27 @@ public class FragmentCotizaciones extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        if (checks[0]==false) {
-            ///
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        ObtenerDatosVolleyMonedas(opcion);
+
+       // if (checks[0]==false) {
+            /*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             //builder.setTitle("Seleccionar Monedas");
             View selector = getLayoutInflater().inflate(R.layout.fragment_dialog, null);
             tvDialog = selector.findViewById(R.id.text_dialog);
             builder.setView(selector);
             String[] monedas = {"Dolar Oficial", "Dolar Blue", "Dolar Soja", "Dolar Contado Con liqui", "Dolar Bolsa",
                     "Bitcoin", "Dolar Turista"};
-            //boolean[] checks = new boolean[7];
             builder.setMultiChoiceItems(monedas, checks, new DialogInterface.OnMultiChoiceClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                /*String todo = "";
+
                 for (int i=0;i<checks.length;i++){
                     if (checks[i]){
                        // todo=todo+monedas[i]+"-";
                     }
                 }
-                tvDialog.setText(todo);*/
+                //tvDialog.setText(todo);*//*
                 }
             });
             builder.setPositiveButton("confirmar", new DialogInterface.OnClickListener() {
@@ -112,13 +112,20 @@ public class FragmentCotizaciones extends Fragment {
                     ObtenerDatosVolleyMonedas();
                 }
             });
-            builder.create().show();
-        }else {ObtenerDatosVolleyMonedas();}
+            builder.create().show();*/
+            //Monedas();
+
+        //}else {
+
+        //ObtenerDatosVolleyMonedas(new boolean[]{checks[0] = true});
         ///
         return rootView;
     }
 
-    public void ObtenerDatosVolleyMonedas(){
+
+
+
+    public void ObtenerDatosVolleyMonedas(boolean[] checks){
         queue = Volley.newRequestQueue(getActivity());
         //endpoint que devuelve un JSON Array con objetos dentro
         String url = "https://www.dolarsi.com/api/api.php?type=valoresprincipales";
@@ -159,4 +166,5 @@ public class FragmentCotizaciones extends Fragment {
         });
         queue.add(request);
     }
+
 }
