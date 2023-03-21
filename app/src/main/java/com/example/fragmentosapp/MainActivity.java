@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-    MenuItem itemMonedas;
+    static MenuItem itemMonedas;
     boolean[] opciones = new boolean[7];
 
     static String compartirNombre="", compartirFecha="", compartirCompra="", compartirVenta="";
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity{
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main,menu);
 
-        itemMonedas = menu.findItem(R.id.menu_cotizaciones);
+       itemMonedas = menu.findItem(R.id.menu_cotizaciones);
         return true;
     }
     @Override
@@ -116,6 +116,21 @@ public class MainActivity extends AppCompatActivity{
                 return  super.onOptionsItemSelected(item);
         }
     }
+
+    static public void ItemMoneda(@NonNull String fecha){
+        Calendar calendario = Calendar.getInstance();
+        DateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+        String fechaDiaDeHoy = (formateador.format(calendario.getTime()));
+
+        if (!fechaDiaDeHoy.equals(fecha)){
+            itemMonedas.setEnabled(false);
+            itemMonedas.setVisible(false);
+        }else{
+            itemMonedas.setEnabled(true);
+            itemMonedas.setVisible(true);
+        }
+    }
+
     //// Dialog fragment cotizaciones de monedas
     public void Monedas(){
         DialogFragment dialogo = new DialogFragment();
@@ -162,15 +177,4 @@ public class MainActivity extends AppCompatActivity{
     }
 /////
 
-    public void ItemMoneda(@NonNull String fechaSelec, String fechaHoy ){
-        if (!fechaSelec.equals(fechaHoy)){
-            itemMonedas.setEnabled(false);
-            itemMonedas.setVisible(false);
-        }else{
-            itemMonedas.setEnabled(true);
-            itemMonedas.setVisible(true);
-        }
-    }
-
-/////////////
 }

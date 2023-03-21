@@ -2,9 +2,13 @@ package com.example.fragmentosapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -16,6 +20,8 @@ public class FragmentDolar extends Fragment {
     static TextView tv_compra;
     static TextView tv_venta;
     private String fecha, compra, venta;
+    MenuItem itemMonedas;
+
 
     public FragmentDolar() {
         // Required empty public constructor
@@ -58,11 +64,14 @@ public class FragmentDolar extends Fragment {
             tv_fecha.setText("Fecha: "+fecha);
         }*/
 
+
         MainActivity.fragmentActivo ="HistorialDolarOficial";
         MainActivity.compartirNombre= "Dolar Oficial";
         MainActivity.compartirFecha = fecha;
         MainActivity.compartirCompra = compra;
         MainActivity.compartirVenta = venta;
+
+        //MainActivity.ItemMoneda(fecha);
 
         tv_fecha.setText("Fecha: "+fecha);
         tv_compra.setText("Precio de Compra: "+compra);
@@ -70,4 +79,6 @@ public class FragmentDolar extends Fragment {
 
         return rootView;
     }
+
+
 }

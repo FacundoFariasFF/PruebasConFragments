@@ -275,8 +275,10 @@ public class FragmentPager extends Fragment {
                 AdminSQLiteOpenHelper.getInstance(getActivity()).Registrar(cotizacionesEndPoint,datefechaSelecdb);
                 historicos = AdminSQLiteOpenHelper.getInstance(getActivity()).Buscar(fechaSelecdb);
 
+
                 pagerAdapter = new PagerAdapterDolar(getActivity(),historicos);
                 viewPager.setAdapter(pagerAdapter);
+
                 ///
             } catch (JSONException e) {
                 e.printStackTrace();

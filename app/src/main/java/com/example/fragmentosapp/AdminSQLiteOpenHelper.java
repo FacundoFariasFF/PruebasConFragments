@@ -63,7 +63,7 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     public void Registrar(ArrayList<DolarOficial> cotizaciones, Date datefechaSelecdb) {
-        String fecha="", compra="", venta="", fechaAux,fechaMenosDias;
+        String fecha="", compra="", venta="", fechaAux,fechaMenosDias, fechaRepetida="";
         Date dateFechaMenosDias,datefechaEndpoint;
         int cantDias =0;
         DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
@@ -87,25 +87,41 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 
                 if (datefechaEndpoint.equals(datefechaSelecdb)) { //si la fecha del endpoint es igual a la seleccionada por el usuario
                     fecha = String.valueOf(cotizaciones.get(j).getDolarFecha());
+
+                    if (fecha.equals(fechaRepetida)){
+                        cantDias--;
+                    }
+
                     compra = String.valueOf(cotizaciones.get(j).getDolarCompra());
                     venta = String.valueOf(cotizaciones.get(j).getDolarVenta());
                 } else {
                     if (datefechaEndpoint.equals(dateFechaMenosDias)) { //si la fecha del endpoint es igual a la fecha anterior de la seleccionada
                         fecha = String.valueOf(cotizaciones.get(j).getDolarFecha());
+                        if (fecha.equals(fechaRepetida)){
+                            cantDias--;
+                        }
                         compra = String.valueOf(cotizaciones.get(j).getDolarCompra());
                         venta = String.valueOf(cotizaciones.get(j).getDolarVenta());
                     } else {
+                        if (fechaAux.equals(fechaRepetida)){
+                            cantDias=cantDias-2;
+                            fecha = fechaRepetida;
+                        }
+                        else{
                         fecha = fechaMenosDias;
+                        }
                         compra = "No hay valores registrados.";
                         venta = "No hay valores registrados.";
-                        j=j-1;
+                        j = j - 1;
                     }
                 }
                 cantDias++; //cant dias es el numero de dias que se resta a la fecha seleccionada por el usuario
+                fechaRepetida = fecha;
                 ContentValues registro = new ContentValues();
                 registro.put("fecha", fecha);
                 registro.put("compra", compra);
                 registro.put("venta", venta);
+                //BaseDeDatos.execSQL("INSERT OR REPLACE ");
                 BaseDeDatos.insert("historico", null, registro);
             }
         close();
