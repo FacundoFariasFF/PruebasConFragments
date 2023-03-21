@@ -11,6 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -18,6 +22,8 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ViewHold
 
     Context context;
     List<Monedas> monedasList;
+
+
 
     public MonedasAdapter(Context context, List<Monedas>monedasList){
         setHasStableIds(true);
@@ -30,6 +36,9 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_monedas,parent,false);
         ViewHolder viewHolder = new ViewHolder(itemView);
+
+        MainActivity.fragmentActivo="CotizacionesHoy";
+
         return viewHolder;
     }
 
@@ -38,9 +47,10 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ViewHold
         Monedas monedas = monedasList.get(position);
 
         holder.nombre.setText(monedas.getNombre());
+        holder.fecha.setText(monedas.getFecha());
         holder.compra.setText("Precio de Compra: " +  monedas.getCompra());
         holder.venta.setText("Precio de Venta: " + monedas.getVenta());
-        holder.variacion.setText("Variacion: " + monedas.getVariacion()+"%");
+        //holder.variacion.setText("Variacion: " + monedas.getVariacion()+"%");
 
         switch (monedas.nombre)
         {
@@ -70,7 +80,7 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ViewHold
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView nombre,compra,venta,variacion;
+        TextView nombre,compra,venta,fecha;
         CardView cardView;
         ImageView imageView;
         public ViewHolder(@NonNull View itemView) {
@@ -79,7 +89,7 @@ public class MonedasAdapter extends RecyclerView.Adapter<MonedasAdapter.ViewHold
             nombre = itemView.findViewById(R.id.txt_nombre);
             compra = itemView.findViewById(R.id.txt_compra);
             venta = itemView.findViewById(R.id.txt_venta);
-            variacion = itemView.findViewById(R.id.txt_variacion);
+            fecha = itemView.findViewById(R.id.txt_fecha);
             imageView = itemView.findViewById(R.id.imagen_nombre);
             cardView = itemView.findViewById(R.id.cardview);
         }

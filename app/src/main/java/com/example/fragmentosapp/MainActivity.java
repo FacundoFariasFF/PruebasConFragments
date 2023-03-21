@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity{
     MenuItem itemMonedas;
     boolean[] opciones = new boolean[7];
 
+    static String compartirNombre="", compartirFecha="", compartirCompra="", compartirVenta="";
+    static String fragmentActivo="";
+    static List<Monedas> monedasList;
 
 
     @SuppressLint("MissingInflatedId")
@@ -105,7 +109,8 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(MainActivity.this,"abrir cotizaciones",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_whatsapp:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentWhatsapp()).commit();
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentWhatsapp()).commit();
+                Compartir();
                 Toast.makeText(MainActivity.this,"abrir whatsapp",Toast.LENGTH_SHORT).show();
                 return true;
             default:
@@ -126,7 +131,37 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+//// metodo para compartir las cotizaciones que aparezcan en  pantalla
+    public void Compartir(){
 
+        DialogFragmentCompartir dialogCompartir = new DialogFragmentCompartir("Compartir Cotizacion");
+        dialogCompartir.show(getSupportFragmentManager(),"dialogo");
+
+        dialogCompartir.ProcesarRespuestaCompartir(new DialogFragmentCompartir.RespuestasCompartir() {
+            @Override
+            public void Confirmar(DialogFragment dialog) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                if (fragmentActivo.equals("HistorialDolarOficial")){ //preguntamos en que fragment estamos para saber que datos compartir
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, compartirNombre + ". " +compartirFecha+". Precio de compra: "+compartirCompra+ ". Precio de venta: "+compartirVenta);
+                }else if (fragmentActivo.equals("CotizacionesHoy")){
+                    String text ="";
+                    for ( Monedas monedas : monedasList){
+                        text+= monedas.getNombre()+", "+monedas.getFecha()+", Precio de compra: "+monedas.getCompra()+", Precio de venta: "+monedas.getVenta()+". ";
+                    }
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+                }
+                sendIntent.setType("text/plain");
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+            }
+            @Override
+            public void Cancelar(DialogFragment dialog) {
+
+            }
+        });
+    }
+/////
 
     public void ItemMoneda(@NonNull String fechaSelec, String fechaHoy ){
         if (!fechaSelec.equals(fechaHoy)){

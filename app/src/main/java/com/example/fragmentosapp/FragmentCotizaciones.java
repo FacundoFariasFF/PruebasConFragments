@@ -23,7 +23,10 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -40,6 +43,8 @@ public class FragmentCotizaciones extends Fragment {
     List<Monedas> monedasList;
     MonedasAdapter adapter;
     boolean[] opcion;
+
+    String fechaHoy;
 
 
 
@@ -83,6 +88,9 @@ public class FragmentCotizaciones extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
+        Calendar calendario = Calendar.getInstance();
+        DateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+        fechaHoy = (formateador.format(calendario.getTime()));
 
         ObtenerDatosVolleyMonedas(opcion);
 
@@ -140,8 +148,8 @@ public class FragmentCotizaciones extends Fragment {
                         String nom_moneda = mJsonObject2.getString("nombre");
                         String pre_compra = mJsonObject2.getString("compra");
                         String pre_venta = mJsonObject2.getString("venta");
-                        String val_variacion = mJsonObject2.has("variacion") ? mJsonObject2.getString("variacion") : "";
-                        Monedas moneda = new Monedas(nom_moneda,pre_compra,pre_venta,val_variacion);
+                        String fecha = fechaHoy;
+                        Monedas moneda = new Monedas(nom_moneda,pre_compra,pre_venta,fecha);
                         monedasList.add(moneda);
                     }
                 }
@@ -157,6 +165,7 @@ public class FragmentCotizaciones extends Fragment {
                     Monedas moneda = new Monedas(nom_moneda,pre_compra,pre_venta,val_variacion);
                     monedasList.add(moneda);
                 }*/
+                MainActivity.monedasList = monedasList;
                 adapter = new MonedasAdapter(getActivity(),monedasList);
                 recyclerView.setAdapter(adapter);
             } catch (JSONException e) {

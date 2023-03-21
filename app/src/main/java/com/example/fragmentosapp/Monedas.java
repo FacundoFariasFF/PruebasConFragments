@@ -4,13 +4,13 @@ public class Monedas {
     String nombre;
     String compra;
     String venta;
-    String variacion;
+    String fecha;
 
-    public Monedas(String nombre, String compra, String venta, String variacion){
+    public Monedas(String nombre, String compra, String venta, String fecha){
         this.nombre = nombre;
         this.compra = compra;
         this.venta = venta;
-        this.variacion= variacion;
+        this.fecha= fecha;
     }
 
     public String getNombre() {
@@ -37,12 +37,12 @@ public class Monedas {
         this.venta = venta;
     }
 
-    public String getVariacion() {
-        return variacion;
+    public String getFecha() {
+        return fecha;
     }
 
-    public void setVariacion(String variacion) {
-        this.variacion = variacion;
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 }
 

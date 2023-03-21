@@ -47,6 +47,14 @@
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/txt_fecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/txt_compra"
@@ -55,7 +63,7 @@
                     android:layout_marginTop="10dp"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="15sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/txt_venta"
@@ -64,15 +72,8 @@
                     android:layout_marginTop="10dp"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="15sp" />
-                <TextView
-                    android:id="@+id/txt_variacion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textAlignment="center"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp" />
+                    android:textSize="20sp" />
+
             </LinearLayout>
 
         </LinearLayout>

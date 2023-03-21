@@ -58,6 +58,12 @@ public class FragmentDolar extends Fragment {
             tv_fecha.setText("Fecha: "+fecha);
         }*/
 
+        MainActivity.fragmentActivo ="HistorialDolarOficial";
+        MainActivity.compartirNombre= "Dolar Oficial";
+        MainActivity.compartirFecha = fecha;
+        MainActivity.compartirCompra = compra;
+        MainActivity.compartirVenta = venta;
+
         tv_fecha.setText("Fecha: "+fecha);
         tv_compra.setText("Precio de Compra: "+compra);
         tv_venta.setText("Precio de Venta: "+venta);
