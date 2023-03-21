@@ -108,8 +108,7 @@ public class MainActivity extends AppCompatActivity{
                 Monedas();
                 Toast.makeText(MainActivity.this,"abrir cotizaciones",Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.menu_whatsapp:
-                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentWhatsapp()).commit();
+            case R.id.menu_compartir:
                 Compartir();
                 Toast.makeText(MainActivity.this,"abrir whatsapp",Toast.LENGTH_SHORT).show();
                 return true;

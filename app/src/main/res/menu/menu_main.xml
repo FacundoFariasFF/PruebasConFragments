@@ -22,9 +22,9 @@
         android:title="monedas"
         app:showAsAction="always" />
     <item
-        android:id="@+id/menu_whatsapp"
-        android:title="whatsapp"
-        android:icon="@drawable/chat"
+        android:id="@+id/menu_compartir"
+        android:title="compartir"
+        android:icon="@drawable/compartir"
         app:showAsAction="always"
         />
 
