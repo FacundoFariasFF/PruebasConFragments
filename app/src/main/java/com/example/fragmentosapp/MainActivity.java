@@ -101,7 +101,8 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(MainActivity.this,"Retroceder",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_calendario:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentPager()).commit();
+                Calendario();
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentPager()).commit();
                 Toast.makeText(MainActivity.this,"abrir calendario",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_cotizaciones:
@@ -177,4 +178,26 @@ public class MainActivity extends AppCompatActivity{
     }
 /////
 
+    public void Calendario(){
+
+        DialogCalendario dialogCalendario= new DialogCalendario();
+        dialogCalendario.show(getSupportFragmentManager(),"dialogo");
+        dialogCalendario.ProcesarRespuestaCalendario(new DialogCalendario.RespuestasCalendario() {
+            @Override
+            public void ConfirmarCalendario(DialogFragment dialogCalendario) {
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentPager()).commit();
+
+
+            }
+
+            @Override
+            public void CancelarCalendario(DialogFragment dialogCalendario) {
+
+            }
+        });
+
+    }
+
+/////
 }

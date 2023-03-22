@@ -31,19 +31,16 @@ public class FragmentPager extends Fragment {
 
     View rootView;
     private ViewPager2 viewPager;
-
     private FragmentStateAdapter pagerAdapter;
-
     static ArrayList<DolarOficial> historicos = new ArrayList();
     static String fechaSelec,fechaSelecdb = "00/00/0000";
     String fechaHoy;
 
     Boolean primeringreso = false;
+    DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
+    DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
+    Date datefechaSelec,datefechaSelecdb;
 
-    /*private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;*/
 
     public FragmentPager() {
         // Required empty public constructor
@@ -70,28 +67,13 @@ public class FragmentPager extends Fragment {
 
         viewPager =rootView.findViewById(R.id.viewpager2);
 
+        //MostrarCalendario();
 
-        MostrarCalendario();
-        /*Calendar calendario = Calendar.getInstance();
-        DateFormat formateadorGuion = new SimpleDateFormat("dd-M-yyyy");
-        fechaHoy = (formateadorGuion.format(calendario.getTime()));
-        //fechaSelec = "16-3-2023";*/
-
-
-
+        FechaSeleccionada();
 
         return rootView;
     }
-   /* @Override
-    public void onBackPressed() {
-        if (viewPager.getCurrentItem() == 0) {
 
-            super.onBackPressed();
-        } else {
-
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-        }
-    }*/
     public void MostrarCalendario(){
 
         Calendar calendario = Calendar.getInstance();
@@ -202,10 +184,9 @@ public class FragmentPager extends Fragment {
     }
 
     public void FechaSeleccionada(){
+
+        fechaSelec = DialogCalendario.fechaSelec;
         Calendar calendario = Calendar.getInstance();
-        DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
-        DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
-        Date datefechaSelec,datefechaSelecdb;
 
         fechaHoy = (formateadorGuion.format(calendario.getTime()));
 
@@ -224,23 +205,29 @@ public class FragmentPager extends Fragment {
         }
         fechaSelecdb = (formateadorBarra.format(datefechaSelecdb.getTime()));
 
-        //Calendar calendarioAux= Calendar.getInstance(TimeZone.getTimeZone(fechaSelec));
-        Calendar calendarioAux= Calendar.getInstance();
-        calendarioAux.setTime(datefechaSelec);
-        calendarioAux.add(Calendar.DAY_OF_YEAR, -7);
-        String fechaMenosSieteDias= (formateadorGuion.format(calendarioAux.getTime()));
-
-        calendarioAux= Calendar.getInstance();
-        calendarioAux.setTime(datefechaSelec);
-        calendarioAux.add(Calendar.DAY_OF_YEAR, +1);
-        String fechaMasUnDia= (formateadorGuion.format(calendarioAux.getTime()));
-
-
         //fechaSelec 01-01-2023 //fechaSelecdb 01/01/2023
 
         historicos.clear();
         AdminSQLiteOpenHelper.getInstance(getActivity()).Eliminar();
 
+
+        int diasMenos= 7, diasMas=1; /// son las variables de los dias anteriores a la fecha que busca el endpopint
+        ObtenerDatos(diasMenos,diasMas);
+
+    }
+
+    public void ObtenerDatos(int diasMenos, int diasMas){ /// son las variables de los dias anteriores a la fecha que busca el endpopint
+
+
+        Calendar calendarioAux= Calendar.getInstance();
+        calendarioAux.setTime(datefechaSelec);
+        calendarioAux.add(Calendar.DAY_OF_YEAR, -diasMenos); /// es la variable de los dias que le resta a la fecha que busca el endpopint
+        String fechaMenosSieteDias= (formateadorGuion.format(calendarioAux.getTime()));
+
+        calendarioAux= Calendar.getInstance();
+        calendarioAux.setTime(datefechaSelec);
+        calendarioAux.add(Calendar.DAY_OF_YEAR, +diasMas); /// es la variable de los dias que le suma a la fecha que busca el endpopint
+        String fechaMasUnDia= (formateadorGuion.format(calendarioAux.getTime()));
 
 // Obtener Datos Del EndPoint
         ArrayList<DolarOficial> cotizacionesEndPoint = new ArrayList();
@@ -249,7 +236,7 @@ public class FragmentPager extends Fragment {
         //al final del url se puede modificar la fecha para obtener menos rango de datos
         // Ejemplo: (https://mercados.ambito.com//dolar/formal/historico-general/03-01-2023/06-01-2023)
 
-        String fechaMin= fechaMenosSieteDias;
+        String fechaMin= fechaMenosSieteDias
         String fechaMax = fechaMasUnDia;
         //String fechaMin= "01-01-2023";
         //String fechaMax = "01-01-2030";
@@ -274,7 +261,6 @@ public class FragmentPager extends Fragment {
                 ///
                 AdminSQLiteOpenHelper.getInstance(getActivity()).Registrar(cotizacionesEndPoint,datefechaSelecdb);
                 historicos = AdminSQLiteOpenHelper.getInstance(getActivity()).Buscar(fechaSelecdb);
-
 
                 pagerAdapter = new PagerAdapterDolar(getActivity(),historicos);
                 viewPager.setAdapter(pagerAdapter);
