@@ -1,5 +1,6 @@
 package com.example.fragmentosapp;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class DolarOficial {
@@ -13,6 +14,7 @@ public class DolarOficial {
         this.dolarCompra = dolarCompra;
         this.dolarVenta = dolarVenta;
     }
+
 
 
     public String getDolarFecha() {

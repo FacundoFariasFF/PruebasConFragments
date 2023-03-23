@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -33,13 +34,17 @@ public class FragmentPager extends Fragment {
     private ViewPager2 viewPager;
     private FragmentStateAdapter pagerAdapter;
     static ArrayList<DolarOficial> historicos = new ArrayList();
+    ArrayList<DolarOficial> cotizacionesEndPoint = new ArrayList();
+    DolarOficial cotizaciones;
     static String fechaSelec,fechaSelecdb = "00/00/0000";
+    String fechaMin, fechaMax;
     String fechaHoy;
+    int diasMenos, diasMas;
 
     Boolean primeringreso = false;
     DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
     DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
-    Date datefechaSelec,datefechaSelecdb;
+    Date datefechaSelec,datefechaSelecdb, datefechaActualizar;
 
 
     public FragmentPager() {
@@ -67,121 +72,71 @@ public class FragmentPager extends Fragment {
 
         viewPager =rootView.findViewById(R.id.viewpager2);
 
+
+
+
         //MostrarCalendario();
 
         FechaSeleccionada();
 
+        pagerAdapter = new PagerAdapterDolar(getActivity(),cotizacionesEndPoint);
+        viewPager.setAdapter(pagerAdapter);
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback(){
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);}
+            @Override
+            public void onPageSelected(int position){
+                super.onPageSelected(position);
+                //Toast.makeText(MainActivity.this,"fragment nro: "+position,Toast.LENGTH_SHORT).show();
+
+                if (position==cotizacionesEndPoint.size()-1){
+
+                    //diasMenos = diasMenos+7;
+                    //diasMas = (diasMas) -8;
+
+                    DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
+                    Calendar calendarioAux= Calendar.getInstance();
+                    calendarioAux.setTime(datefechaActualizar);
+                    calendarioAux.add(Calendar.DAY_OF_YEAR, -7); /// es la variable de los dias que le resta a la fecha que busca el endpopint
+                    String fechaMenosSieteDias= (formateadorGuion.format(calendarioAux.getTime()));
+
+                    /*calendarioAux= Calendar.getInstance();
+                    calendarioAux.setTime(datefechaActualizar);
+                    calendarioAux.add(Calendar.DAY_OF_YEAR, +1); /// es la variable de los dias que le suma a la fecha que busca el endpopint
+                    String fechaMasUnDia= (formateadorGuion.format(calendarioAux.getTime()));*/
+
+                    String fechaMenosSieteDias = fechaMax;
+                    String fechaMasUnDia = fechaMin;
+
+
+
+
+                    historicos.clear();
+                    AdminSQLiteOpenHelper.getInstance(getActivity()).Eliminar();
+
+
+
+
+
+
+                    pagerAdapter.notifyDataSetChanged();
+                    ObtenerDatos(fechaMenosSieteDias,fechaMasUnDia);
+                }
+            }
+            @Override
+            public void onPageScrollStateChanged(int state){
+                super.onPageScrollStateChanged(state);
+            }
+        });
+
+
         return rootView;
     }
 
-    public void MostrarCalendario(){
-
-        Calendar calendario = Calendar.getInstance();
-        int year = calendario.get(Calendar.YEAR);
-        int month = calendario.get(Calendar.MONTH);
-        int dayOfMonth = calendario.get(Calendar.DAY_OF_MONTH);
-
-        /*DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
-        DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
-
-        fechaHoy = (formateadorGuion.format(calendario.getTime()));*/
-        DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-               // Date datefechaSelec,datefechaSelecdb;
-
-                fechaSelec = dayOfMonth + "-" + (month + 1) + "-" + year;
-                FechaSeleccionada();
-/*
-                try {
-                    datefechaSelec = formateadorGuion.parse(fechaSelec); //pasamos String a date para poder cambiarle el formato porq el string tiene un solo digito
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-
-                fechaSelec = (formateadorGuion.format(datefechaSelec.getTime())); //cambiamos el formato de la fecha y lo ponemos en un string "dd-MM-yyyy"
-                fechaSelecdb = fechaSelec;
-                try {
-                    datefechaSelecdb = formateadorGuion.parse(fechaSelecdb);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-                fechaSelecdb = (formateadorBarra.format(datefechaSelecdb.getTime()));
-
-                //Calendar calendarioAux= Calendar.getInstance(TimeZone.getTimeZone(fechaSelec));
-                Calendar calendarioAux= Calendar.getInstance();
-                calendarioAux.setTime(datefechaSelec);
-                calendarioAux.add(Calendar.DAY_OF_YEAR, -7);
-                String fechaMenosSieteDias= (formateadorGuion.format(calendarioAux.getTime()));
-
-                calendarioAux= Calendar.getInstance();
-                calendarioAux.setTime(datefechaSelec);
-                calendarioAux.add(Calendar.DAY_OF_YEAR, +1);
-                String fechaMasUnDia= (formateadorGuion.format(calendarioAux.getTime()));
 
 
-                //fechaSelec 01-01-2023 //fechaSelecdb 01/01/2023
-
-                historicos.clear();
-                AdminSQLiteOpenHelper.getInstance(getActivity()).Eliminar();
-
-
-// Obtener Datos Del EndPoint
-                ArrayList<DolarOficial> cotizacionesEndPoint = new ArrayList();
-                RequestQueue queue;
-                queue = Volley.newRequestQueue(getActivity());
-                //al final del url se puede modificar la fecha para obtener menos rango de datos
-                // Ejemplo: (https://mercados.ambito.com//dolar/formal/historico-general/03-01-2023/06-01-2023)
-
-                String fechaMin= fechaMenosSieteDias;
-                String fechaMax = fechaMasUnDia;
-                //String fechaMin= "01-01-2023";
-                //String fechaMax = "01-01-2030";
-                String url = "https://mercados.ambito.com//dolar/formal/historico-general/"+fechaMin+"/"+fechaMax;
-                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
-                    try {
-                        DolarOficial cotizaciones;
-                        String fecha ;
-                        String compra;
-                        String venta;
-                        for (int i = 1; i<response.length(); i++) {
-                            JSONArray mJsonArray = response.getJSONArray(i);
-                            fecha = mJsonArray.getString(0);
-                            compra = mJsonArray.getString(1);
-                            venta = mJsonArray.getString(2);
-
-                            //recorremos el JSON y enviamos los datos al ArrayList cotizaciones para luego cargar la Base de Datos.
-                            //AdminSQLiteOpenHelper.getInstance(context).Registrar(fecha,compra,venta);
-                            cotizaciones = new DolarOficial(fecha,compra,venta);
-                            cotizacionesEndPoint.add(cotizaciones);
-                        }
-                        ///
-                        AdminSQLiteOpenHelper.getInstance(getActivity()).Registrar(cotizacionesEndPoint,datefechaSelecdb);
-                        historicos = AdminSQLiteOpenHelper.getInstance(getActivity()).Buscar(fechaSelecdb);
-
-                        pagerAdapter = new PagerAdapterDolar(getActivity(),historicos);
-                        viewPager.setAdapter(pagerAdapter);
-                        ///
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> {
-                });
-                queue.add(request);*/
-
-// Fin Obtencion Datos del EndPoint
-
-            }
-        },year,month,dayOfMonth);
-        //calendario.set(2023, 2, 1);//Year,Mounth -1,Day
-        calendario.set(2002, 3, 9);//Year,Mounth -1,Day
-        dialog.getDatePicker().setMinDate(calendario.getTimeInMillis());
-        calendario.set(year,month,dayOfMonth);
-        dialog.getDatePicker().setMaxDate(calendario.getTimeInMillis());
-
-        dialog.show();
-
-    }
 
     public void FechaSeleccionada(){
 
@@ -211,39 +166,43 @@ public class FragmentPager extends Fragment {
         AdminSQLiteOpenHelper.getInstance(getActivity()).Eliminar();
 
 
-        int diasMenos= 7, diasMas=1; /// son las variables de los dias anteriores a la fecha que busca el endpopint
-        ObtenerDatos(diasMenos,diasMas);
-
-    }
-
-    public void ObtenerDatos(int diasMenos, int diasMas){ /// son las variables de los dias anteriores a la fecha que busca el endpopint
-
+        diasMenos= 7;
+        diasMas=1; /// son las variables de los dias anteriores a la fecha que busca el endpopint
 
         Calendar calendarioAux= Calendar.getInstance();
         calendarioAux.setTime(datefechaSelec);
         calendarioAux.add(Calendar.DAY_OF_YEAR, -diasMenos); /// es la variable de los dias que le resta a la fecha que busca el endpopint
         String fechaMenosSieteDias= (formateadorGuion.format(calendarioAux.getTime()));
 
+        datefechaActualizar = calendarioAux.getTime();
+
         calendarioAux= Calendar.getInstance();
         calendarioAux.setTime(datefechaSelec);
         calendarioAux.add(Calendar.DAY_OF_YEAR, +diasMas); /// es la variable de los dias que le suma a la fecha que busca el endpopint
         String fechaMasUnDia= (formateadorGuion.format(calendarioAux.getTime()));
 
+
+        ObtenerDatos(fechaMenosSieteDias,fechaMasUnDia);
+
+    }
+
+    public void ObtenerDatos(String fechaMenosSieteDias, String fechaMasUnDia){ /// son las variables de los dias anteriores a la fecha que busca el endpopint
+
 // Obtener Datos Del EndPoint
-        ArrayList<DolarOficial> cotizacionesEndPoint = new ArrayList();
+        //ArrayList<DolarOficial> cotizacionesEndPoint = new ArrayList();
         RequestQueue queue;
         queue = Volley.newRequestQueue(getActivity());
         //al final del url se puede modificar la fecha para obtener menos rango de datos
         // Ejemplo: (https://mercados.ambito.com//dolar/formal/historico-general/03-01-2023/06-01-2023)
 
-        String fechaMin= fechaMenosSieteDias;
-        String fechaMax = fechaMasUnDia;
+        fechaMin= fechaMenosSieteDias;
+        fechaMax = fechaMasUnDia;
         //String fechaMin= "01-01-2023";
         //String fechaMax = "01-01-2030";
         String url = "https://mercados.ambito.com//dolar/formal/historico-general/"+fechaMin+"/"+fechaMax;
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
             try {
-                DolarOficial cotizaciones;
+                //DolarOficial cotizaciones;
                 String fecha ;
                 String compra;
                 String venta;
@@ -259,11 +218,11 @@ public class FragmentPager extends Fragment {
                     cotizacionesEndPoint.add(cotizaciones);
                 }
                 ///
-                AdminSQLiteOpenHelper.getInstance(getActivity()).Registrar(cotizacionesEndPoint,datefechaSelecdb);
-                historicos = AdminSQLiteOpenHelper.getInstance(getActivity()).Buscar(fechaSelecdb);
 
-                pagerAdapter = new PagerAdapterDolar(getActivity(),historicos);
-                viewPager.setAdapter(pagerAdapter);
+                pagerAdapter.notifyDataSetChanged();
+
+                //AdminSQLiteOpenHelper.getInstance(getActivity()).Registrar(cotizacionesEndPoint,datefechaSelecdb);
+                //historicos = AdminSQLiteOpenHelper.getInstance(getActivity()).Buscar(fechaSelecdb);
 
                 ///
             } catch (JSONException e) {
@@ -274,6 +233,12 @@ public class FragmentPager extends Fragment {
         queue.add(request);
 
 // Fin Obtencion Datos del EndPoint
+
+    }
+
+    public void RecibirFecha(String fecha){
+
+        //poner fecha en la variable que quiera o hacer lo que quiera
 
     }
 

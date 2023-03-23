@@ -1,5 +1,6 @@
 package com.example.fragmentosapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class FragmentDolar extends Fragment {
+
     View rootView;
 
     static TextView tv_fecha;
@@ -64,12 +66,13 @@ public class FragmentDolar extends Fragment {
             tv_fecha.setText("Fecha: "+fecha);
         }*/
 
-
         MainActivity.fragmentActivo ="HistorialDolarOficial";
         MainActivity.compartirNombre= "Dolar Oficial";
         MainActivity.compartirFecha = fecha;
         MainActivity.compartirCompra = compra;
         MainActivity.compartirVenta = venta;
+
+        ;
 
         //MainActivity.ItemMoneda(fecha);
 
@@ -79,6 +82,5 @@ public class FragmentDolar extends Fragment {
 
         return rootView;
     }
-
 
 }
