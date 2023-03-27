@@ -41,10 +41,9 @@ public class FragmentPager extends Fragment {
     String fechaHoy;
     int diasMenos, diasMas;
 
-    Boolean primeringreso = false;
     DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
     DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
-    Date datefechaSelec,datefechaSelecdb, datefechaActualizar;
+    Date datefechaSelec,datefechaSelecdb, datefechaFragment;
 
 
     public FragmentPager() {
@@ -73,6 +72,10 @@ public class FragmentPager extends Fragment {
         viewPager =rootView.findViewById(R.id.viewpager2);
 
 
+        Calendar calendario = Calendar.getInstance();
+        calendario.add(Calendar.DAY_OF_YEAR,+1);
+        DateFormat formateador = new SimpleDateFormat("dd-MM-yyyy");
+        fechaMax = (formateador.format(calendario.getTime()));
 
 
         //MostrarCalendario();
@@ -85,52 +88,62 @@ public class FragmentPager extends Fragment {
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback(){
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);}
-            @Override
-            public void onPageSelected(int position){
-                super.onPageSelected(position);
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+
                 //Toast.makeText(MainActivity.this,"fragment nro: "+position,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),cotizacionesEndPoint.get(position).getDolarFecha(),Toast.LENGTH_SHORT).show();
+
+                String fechaFragment= cotizacionesEndPoint.get(position).getDolarFecha();
 
                 if (position==cotizacionesEndPoint.size()-1){
 
-                    //diasMenos = diasMenos+7;
-                    //diasMas = (diasMas) -8;
+                    try {
+                        datefechaFragment = formateadorBarra.parse(fechaFragment);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    fechaFragment= (formateadorGuion.format(datefechaFragment.getTime()));
+                    try {
+                        datefechaFragment = formateadorGuion.parse(fechaFragment);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
 
-                    DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
-                    Calendar calendarioAux= Calendar.getInstance();
-                    calendarioAux.setTime(datefechaActualizar);
+
+                    Calendar calendarioAux;
+                    calendarioAux= Calendar.getInstance();
+                    calendarioAux.setTime(datefechaFragment);
                     calendarioAux.add(Calendar.DAY_OF_YEAR, -7); /// es la variable de los dias que le resta a la fecha que busca el endpopint
                     String fechaMenosSieteDias= (formateadorGuion.format(calendarioAux.getTime()));
 
                     /*calendarioAux= Calendar.getInstance();
-                    calendarioAux.setTime(datefechaActualizar);
-                    calendarioAux.add(Calendar.DAY_OF_YEAR, +1); /// es la variable de los dias que le suma a la fecha que busca el endpopint
+                    calendarioAux.setTime(datefechaFragment);
+                    calendarioAux.add(Calendar.DAY_OF_YEAR, +2); /// es la variable de los dias que le suma a la fecha que busca el endpopint
                     String fechaMasUnDia= (formateadorGuion.format(calendarioAux.getTime()));*/
 
-                    String fechaMenosSieteDias = fechaMax;
-                    String fechaMasUnDia = fechaMin;
-
-
+                    String fechaMasUnDia= (formateadorGuion.format(datefechaFragment.getTime()));
 
 
                     historicos.clear();
                     AdminSQLiteOpenHelper.getInstance(getActivity()).Eliminar();
 
-
-
-
-
-
                     pagerAdapter.notifyDataSetChanged();
                     ObtenerDatos(fechaMenosSieteDias,fechaMasUnDia);
                 }
+
+            }
+            @Override
+            public void onPageSelected(int position){
+                super.onPageSelected(position);
+
             }
             @Override
             public void onPageScrollStateChanged(int state){
                 super.onPageScrollStateChanged(state);
+
+
             }
         });
-
 
         return rootView;
     }
@@ -141,9 +154,9 @@ public class FragmentPager extends Fragment {
     public void FechaSeleccionada(){
 
         fechaSelec = DialogCalendario.fechaSelec;
-        Calendar calendario = Calendar.getInstance();
 
-        fechaHoy = (formateadorGuion.format(calendario.getTime()));
+        //Calendar calendario = Calendar.getInstance();
+        //fechaHoy = (formateadorGuion.format(calendario.getTime()));
 
         try {
             datefechaSelec = formateadorGuion.parse(fechaSelec); //pasamos String a date para poder cambiarle el formato porq el string tiene un solo digito
@@ -153,13 +166,13 @@ public class FragmentPager extends Fragment {
 
         fechaSelec = (formateadorGuion.format(datefechaSelec.getTime())); //cambiamos el formato de la fecha y lo ponemos en un string "dd-MM-yyyy"
         fechaSelecdb = fechaSelec;
+
         try {
             datefechaSelecdb = formateadorGuion.parse(fechaSelecdb);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
         fechaSelecdb = (formateadorBarra.format(datefechaSelecdb.getTime()));
-
         //fechaSelec 01-01-2023 //fechaSelecdb 01/01/2023
 
         historicos.clear();
@@ -169,21 +182,19 @@ public class FragmentPager extends Fragment {
         diasMenos= 7;
         diasMas=1; /// son las variables de los dias anteriores a la fecha que busca el endpopint
 
-        Calendar calendarioAux= Calendar.getInstance();
+        Calendar calendarioAux;
+        calendarioAux= Calendar.getInstance();
         calendarioAux.setTime(datefechaSelec);
         calendarioAux.add(Calendar.DAY_OF_YEAR, -diasMenos); /// es la variable de los dias que le resta a la fecha que busca el endpopint
         String fechaMenosSieteDias= (formateadorGuion.format(calendarioAux.getTime()));
 
-        datefechaActualizar = calendarioAux.getTime();
 
         calendarioAux= Calendar.getInstance();
         calendarioAux.setTime(datefechaSelec);
         calendarioAux.add(Calendar.DAY_OF_YEAR, +diasMas); /// es la variable de los dias que le suma a la fecha que busca el endpopint
         String fechaMasUnDia= (formateadorGuion.format(calendarioAux.getTime()));
 
-
         ObtenerDatos(fechaMenosSieteDias,fechaMasUnDia);
-
     }
 
     public void ObtenerDatos(String fechaMenosSieteDias, String fechaMasUnDia){ /// son las variables de los dias anteriores a la fecha que busca el endpopint
@@ -236,10 +247,6 @@ public class FragmentPager extends Fragment {
 
     }
 
-    public void RecibirFecha(String fecha){
 
-        //poner fecha en la variable que quiera o hacer lo que quiera
-
-    }
 
 }
