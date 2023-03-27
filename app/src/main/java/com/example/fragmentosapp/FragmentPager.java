@@ -40,7 +40,7 @@ public class FragmentPager extends Fragment {
     String fechaMin, fechaMax;
     String fechaHoy;
     int diasMenos, diasMas;
-
+    int nroFragment=0;
     DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
     DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
     Date datefechaSelec,datefechaSelecdb, datefechaFragment;
@@ -142,13 +142,14 @@ public class FragmentPager extends Fragment {
 
                     pagerAdapter.notifyDataSetChanged();
 
-                    int i =position;
-                    String fechaI=cotizacionesEndPoint.get(i).getDolarFecha();
+                   // int nroFragment =position;
+                   /* nroFragment =position;
+                    String fechaI=cotizacionesEndPoint.get(nroFragment).getDolarFecha();
                     while (fechaSelecdb.equals(fechaI)){
-                        fechaI=cotizacionesEndPoint.get(i).getDolarFecha();
-                        i--;
+                        fechaI=cotizacionesEndPoint.get(nroFragment).getDolarFecha();
+                        nroFragment--;
                     }
-                    viewPager.setCurrentItem(i,true);
+                    viewPager.setCurrentItem(nroFragment,true);*/
 
 
                     ObtenerDatos(fechaMenosSieteDias,fechaMasUnDia);
@@ -198,7 +199,7 @@ public class FragmentPager extends Fragment {
 
 
         diasMenos= 7;
-        diasMas=1; /// son las variables de los dias anteriores a la fecha que busca el endpopint
+        diasMas=7; /// son las variables de los dias anteriores a la fecha que busca el endpopint
 
         Calendar calendarioAux;
         calendarioAux= Calendar.getInstance();
@@ -251,6 +252,16 @@ public class FragmentPager extends Fragment {
                 ///
 
                 pagerAdapter.notifyDataSetChanged();
+
+                String fechaI=cotizacionesEndPoint.get(nroFragment).getDolarFecha();
+                if(!fechaSelecdb.equals(fechaI)){
+                    while (!fechaSelecdb.equals(fechaI)){
+                        nroFragment++;
+                        fechaI=cotizacionesEndPoint.get(nroFragment).getDolarFecha();
+                    }
+                    viewPager.setCurrentItem(nroFragment,false);
+                }
+
 
 
 
