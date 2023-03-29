@@ -14,10 +14,14 @@ import android.widget.DatePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 public class DialogCalendario extends DialogFragment {
-    static String fechaSelec;
+    static String fechaSelec; //borrar
+    static LocalDate fechaSeleccionada;
+
     public DialogCalendario(){
     }
 
@@ -35,7 +39,13 @@ public class DialogCalendario extends DialogFragment {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
 
-                fechaSelec = dayOfMonth + "-" + (month + 1) + "-" + year;
+
+                fechaSelec = dayOfMonth + "-" + (month + 1) + "-" + year; //"0-0-000
+                fechaSeleccionada = LocalDate.of(year,(month + 1),dayOfMonth);
+                //DateTimeFormatter formatoDeSalida = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                //String fechaSeleccionadaaux= fechaSeleccionada.format(formatoDeSalida); // para pasar de date a string
+
+
                 respuestasCalendario.ConfirmarCalendario(DialogCalendario.this);
             }
         },year,month,dayOfMonth);

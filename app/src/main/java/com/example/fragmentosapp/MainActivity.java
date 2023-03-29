@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         DateFormat formateador = new SimpleDateFormat("dd-M-yyyy");
         String fechaHoy = (formateador.format(calendario.getTime()));
         DialogCalendario.fechaSelec = fechaHoy;
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentPager()).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentPager()).commit();
 
 
     }
