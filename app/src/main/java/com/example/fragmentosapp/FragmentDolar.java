@@ -22,14 +22,14 @@ public class FragmentDolar extends Fragment {
     static TextView tv_compra;
     static TextView tv_venta;
     private String fecha, compra, venta;
-    MenuItem itemMonedas;
 
 
     public FragmentDolar() {
         // Required empty public constructor
     }
 
-    public static FragmentDolar newInstance(DolarOficial fecha) {
+    //public static FragmentDolar newInstance(DolarOficial fecha) {
+    public static FragmentDolar newInstance(DolarHistorico fecha) {
         FragmentDolar fragment = new FragmentDolar();
         Bundle args = new Bundle();
         args.putString("fecha", String.valueOf(fecha.getDolarFecha()));

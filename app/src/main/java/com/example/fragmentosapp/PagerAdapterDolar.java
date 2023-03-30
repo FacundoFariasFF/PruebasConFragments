@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 class PagerAdapterDolar extends FragmentStateAdapter{
-    static ArrayList<DolarOficial> dolarHistoricos;
+    //static ArrayList<DolarOficial> dolarHistoricos;
+    static ArrayList<DolarHistorico> dolarHistoricos;
 
-    public PagerAdapterDolar(FragmentActivity fa, ArrayList<DolarOficial> historicos) {
+    public PagerAdapterDolar(FragmentActivity fa, ArrayList<DolarHistorico> historicos) {
         super(fa);
         dolarHistoricos = historicos;
     }
