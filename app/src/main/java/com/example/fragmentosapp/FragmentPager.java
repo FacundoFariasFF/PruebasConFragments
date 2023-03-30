@@ -43,6 +43,7 @@ public class FragmentPager extends Fragment {
 
     static ArrayList<DolarHistorico> historialCotizaciones = new ArrayList();
     ArrayList<DolarHistorico> endPointCotizaciones = new ArrayList();
+    ArrayList<DolarHistorico> endPointCotizacionesTop = new ArrayList();
     DolarHistorico cotizacion;
 
 
@@ -56,6 +57,7 @@ public class FragmentPager extends Fragment {
     int diasMenos, diasMas;
     int nroFragment=0;
     Boolean topFragment= false;
+    Boolean endFragment= false;
     DateFormat formateadorGuion = new SimpleDateFormat("dd-MM-yyyy");
     DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
     Date datefechaSelec,datefechaSelecdb, datefechaFragment;
@@ -99,12 +101,10 @@ public class FragmentPager extends Fragment {
         fechaActual= LocalDate.now();
 
         //MostrarCalendario();
-
         FechaSeleccionada();
 
         pagerAdapter = new PagerAdapterDolar(getActivity(),endPointCotizaciones);
         viewPager.setAdapter(pagerAdapter);
-
 
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback(){
@@ -127,7 +127,9 @@ public class FragmentPager extends Fragment {
                     //historicos.clear();
                     //AdminSQLiteOpenHelper.getInstance(getActivity()).Eliminar();
 
-                    pagerAdapter.notifyDataSetChanged();
+                    endFragment=true;
+                    topFragment=false;
+                    //pagerAdapter.notifyDataSetChanged();
                     ObtenerDatos(fechaDiaMenor,fechaDiaMayor);
                 } else if(position==0){
                     //muestra en pantalla la fecha mayor final (esto no va en la app final)
@@ -139,91 +141,12 @@ public class FragmentPager extends Fragment {
 
                     //historicos.clear();
                     //AdminSQLiteOpenHelper.getInstance(getActivity()).Eliminar();
-                    
+
                     topFragment=true;
-                    pagerAdapter.notifyDataSetChanged();
+                    endFragment=false;
+                    //pagerAdapter.notifyDataSetChanged();
                     ObtenerDatos(fechaDiaMenor,fechaDiaMayor);
                 }
-
-                ///////////////////////////////////////////////////////////////////////////////////
-                /*if (position==cotizacionesEndPoint.size()-1){
-                    //muestra en pantalla la fecha menor final (esto no va en la app final)
-                    Toast.makeText(getContext(),cotizacionesEndPoint.get(position).getDolarFecha(),Toast.LENGTH_SHORT).show();
-
-                    // contine la fecha que hay en fragment actual
-                    String fechaFragment= cotizacionesEndPoint.get(position).getDolarFecha();
-
-                    //// como la fecha viene "00/00/0000" la convierte a "00-00-0000" que es lo necesita el endpoint
-                    try {
-                        datefechaFragment = formateadorBarra.parse(fechaFragment);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                    fechaFragment= (formateadorGuion.format(datefechaFragment.getTime()));
-                    try {
-                        datefechaFragment = formateadorGuion.parse(fechaFragment);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                    //// datefechaFragment es un date con formato "00-00-0000"
-
-                    //seteamos el datefechaFragment al Calendar para restarle 7 dias y poner esa fecha en un string
-                    Calendar calendarioAux;
-                    calendarioAux= Calendar.getInstance();
-                    calendarioAux.setTime(datefechaFragment);
-                    calendarioAux.add(Calendar.DAY_OF_YEAR, -7);
-                    //string que contiene la fecha de 7 dias antes
-                    String fechaMenosSieteDias= (formateadorGuion.format(calendarioAux.getTime()));
-                    // String que tiene el dia del fragment actual para que funcione como cota superior en el rango de fechas
-                    String fechaMasUnDia= (formateadorGuion.format(datefechaFragment.getTime()));
-
-                    //historicos.clear();
-                    //AdminSQLiteOpenHelper.getInstance(getActivity()).Eliminar();
-
-                    pagerAdapter.notifyDataSetChanged();
-
-                    ObtenerDatos(fechaMenosSieteDias,fechaMasUnDia); // enviamos la fecha minima y maxima
-                } else if(position==0){
-                    Toast.makeText(getContext(),cotizacionesEndPoint.get(position).getDolarFecha(),Toast.LENGTH_SHORT).show();
-
-                    // contine la fecha que hay en fragment actual
-                    String fechaFragment= cotizacionesEndPoint.get(position).getDolarFecha();
-
-                    //// como la fecha viene "00/00/0000" la convierte a "00-00-0000" que es lo necesita el endpoint
-                    try {
-                        datefechaFragment = formateadorBarra.parse(fechaFragment);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                    fechaFragment= (formateadorGuion.format(datefechaFragment.getTime()));
-                    try {
-                        datefechaFragment = formateadorGuion.parse(fechaFragment);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                    //// datefechaFragment es un date con formato "00-00-0000"
-
-                    //seteamos el datefechaFragment al Calendar para restarle 7 dias y poner esa fecha en un string
-                    Calendar calendarioAux;
-                    calendarioAux= Calendar.getInstance();
-                    calendarioAux.setTime(datefechaFragment);
-                    calendarioAux.add(Calendar.DAY_OF_YEAR, +7);
-                    //string que contiene la fecha de 7 dias antes
-                    String fechaMenosSieteDias= (formateadorGuion.format(datefechaFragment.getTime()));
-                    // String que tiene el dia del fragment actual para que funcione como cota superior en el rango de fechas
-                    String fechaMasUnDia= (formateadorGuion.format(calendarioAux.getTime()));
-
-                    //historicos.clear();
-                    //AdminSQLiteOpenHelper.getInstance(getActivity()).Eliminar();
-                    top=true;
-                    fechaFragmentFinal= fechaFragment;
-                    pagerAdapter.notifyDataSetChanged();
-
-                    ObtenerDatos(fechaMenosSieteDias,fechaMasUnDia); // enviamos la fecha minima y maxima
-                }*/
-                ///////////////////////////////////////////////////////////////////////////////////
-
-
             }
             @Override
             public void onPageScrollStateChanged(int state){
@@ -270,7 +193,7 @@ public class FragmentPager extends Fragment {
                 String fecha ;
                 String compra;
                 String venta;
-                int j = 7; //un numero menos que lo que se suma a fecha dia mayor.
+
                 int dias=0;
                 for (int i = 1; i<response.length(); i++) {
                     JSONArray mJsonArray = response.getJSONArray(i);
@@ -290,7 +213,7 @@ public class FragmentPager extends Fragment {
                         cotizacion = new DolarHistorico(dateFecha,compra,venta);
                         //endPointCotizaciones.add(cotizacion);
                         if (topFragment){
-                            endPointCotizaciones.add(i-1,cotizacion);
+                            endPointCotizacionesTop.add(cotizacion);
                         }else {
                             endPointCotizaciones.add(cotizacion);
                         }
@@ -302,17 +225,17 @@ public class FragmentPager extends Fragment {
                             // mientras la fecha del endpoint sea distinta a la fecha que deberia ser.
                             // significa que el endpoint no trae ese dia y por lo tanto no hay valores.
                             while (!(dateFechaAux.isEqual(fechaMaxAux.minusDays(dias)))) {
-                                //dateFecha = fechaSelec.plusDays(j);
                                 dateFecha = fechaMaxAux.minusDays(dias);
                                 compra = "No hay valores registrados.";
                                 venta = "No hay valores registrados.";
                                 cotizacion = new DolarHistorico(dateFecha,compra,venta);
                                 //endPointCotizaciones.add(cotizacion);
                                 if (topFragment){
-                                    endPointCotizaciones.add(i-1,cotizacion);
+                                    endPointCotizacionesTop.add(cotizacion);
                                 }else {
                                     endPointCotizaciones.add(cotizacion);
                                 }
+
                                 dias++;
                             } // cuando la fecha es igual a la que deberia, sale del While y carga la fecha en la lista.
                             dateFecha = dateFechaAux;
@@ -321,7 +244,7 @@ public class FragmentPager extends Fragment {
                             cotizacion = new DolarHistorico(dateFecha,compra,venta);
                             //endPointCotizaciones.add(cotizacion);
                             if (topFragment){
-                                endPointCotizaciones.add(i-1,cotizacion);
+                                endPointCotizacionesTop.add(cotizacion);
                             }else {
                                 endPointCotizaciones.add(cotizacion);
                             }
@@ -331,36 +254,53 @@ public class FragmentPager extends Fragment {
                     //recorremos el JSON y enviamos los datos al ArrayList endPointCotizaciones para luego cargar la Base de Datos.
                     //AdminSQLiteOpenHelper.getInstance(context).Registrar(fecha,compra,venta);
                 }
+                if (topFragment){
+                    //int top= endPointCotizacionesTop.size()-1;
+                    endPointCotizacionesTop.remove(endPointCotizacionesTop.size()-1);
+                    endPointCotizacionesTop.addAll(endPointCotizaciones);
+                    endPointCotizaciones = endPointCotizacionesTop;
+                }
                 ///
                 Toast.makeText(getContext(),"cantidad de valores en la lista endpoint: "+ String.valueOf(endPointCotizaciones.size()),Toast.LENGTH_SHORT).show();
                 ///
 
 
+                int positionFragment=0;
+                LocalDate fechaFragmentInicial = null;
+                if (endFragment || topFragment){
+                    if (endFragment){
+                        fechaFragmentInicial = fechaMax;
+                    }
+                    else if (topFragment){
+                        fechaFragmentInicial = fechaMin;
+                    }
+                }else {
+                    fechaFragmentInicial = fechaSelec;
+                }
+                while (!fechaFragmentInicial.equals(endPointCotizaciones.get(positionFragment).getDolarFecha())) {
+                    positionFragment++;
+                }
                 pagerAdapter.notifyDataSetChanged();
+                viewPager.setCurrentItem(positionFragment, false);
+
+
+
+                /*pagerAdapter.notifyDataSetChanged();
                 // fechaI tiene la fecha del fragment maximo
                 LocalDate fechaI=endPointCotizaciones.get(nroFragment).getDolarFecha();
-                // si la fecha seleccionada es distinta a la fecha del fragment actual
-                if (topFragment){
+                if (!fechaSelec.equals(fechaI)) {
                     nroFragment = 0;
-                    LocalDate fechaAux = fechaSelec.plusDays(nroFragment);
-                    while (!fechaI.equals(fechaAux)){
+                    //mientras se mantenga esa desigualdad
+                    while (!fechaSelec.equals(fechaI)) {
+                        //avanzan los fragments en busqueda del fragment que contiene la fecha igual a la seleccionada
                         nroFragment++;
-                        fechaAux = fechaSelec.plusDays(nroFragment);
+                        fechaI = endPointCotizaciones.get(nroFragment).getDolarFecha();
                     }
+                    //muestra el fragment que corresponde, el que tiene la fecha correcta.
                     viewPager.setCurrentItem(nroFragment, false);
-                }else {
-                    if (!fechaSelec.equals(fechaI)) {
-                        nroFragment = 0;
-                        //mientras se mantenga esa desigualdad
-                        while (!fechaSelec.equals(fechaI)) {
-                            //avanzan los fragments en busqueda del fragment que contiene la fecha igual a la seleccionada
-                            nroFragment++;
-                            fechaI = endPointCotizaciones.get(nroFragment).getDolarFecha();
-                        }
-                        //muestra el fragment que corresponde, el que tiene la fecha correcta.
-                        viewPager.setCurrentItem(nroFragment, false);
-                    }
-                }
+                }*/
+
+
 
 
                 //AdminSQLiteOpenHelper.getInstance(getActivity()).Registrar(cotizacionesEndPoint,datefechaSelecdb);
