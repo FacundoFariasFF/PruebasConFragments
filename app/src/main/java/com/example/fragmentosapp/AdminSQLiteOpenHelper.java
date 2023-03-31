@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,12 +20,7 @@ import java.util.Date;
 
 //esta class administra la db
 public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
-
-
-
-
     private static AdminSQLiteOpenHelper instance;
-    //AdminSQLiteOpenHelper admin;
     AdminSQLiteOpenHelper admin;
     SQLiteDatabase BaseDeDatos;
 
@@ -62,7 +59,20 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
         BaseDeDatos.close();
     }
 
-    public void Registrar(ArrayList<DolarOficial> cotizaciones, Date datefechaSelecdb) {
+    public void Registrar(ArrayList<DolarHistorico> cotizaciones) {
+        open();
+        for (int j=0; j<cotizaciones.size();j++) {
+            ContentValues registro = new ContentValues();
+            // registramos en la db los campos fecha,compra y venta
+            registro.put("fecha", String.valueOf(cotizaciones.get(j).getDolarFecha()));
+            registro.put("compra", cotizaciones.get(j).getDolarCompra());
+            registro.put("venta", cotizaciones.get(j).getDolarVenta());
+            // los insertamos en la "tabla"
+            BaseDeDatos.insert("historico", null, registro);
+        }
+        close();
+    }
+    /*public void Registrar(ArrayList<DolarOficial> cotizaciones, Date datefechaSelecdb) {
         String fecha="", compra="", venta="", fechaAux,fechaMenosDias, fechaRepetida="";
         Date dateFechaMenosDias,datefechaEndpoint;
         int cantDias =0;
@@ -125,52 +135,38 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
                 BaseDeDatos.insert("historico", null, registro);
             }
         close();
-    }
-    public ArrayList<DolarOficial> Buscar(String db_fecha_cal) {
-        //public void Buscar() {
+    }*/
+    public ArrayList<DolarHistorico> Buscar() {
+        LocalDate dateFecha,dateFechaDB;
         String fecha;
         String compra;
         String venta;
-        ArrayList<DolarOficial> historicos = new ArrayList();
 
-        //creamos una validacion para que no este el campo fecha vacio
+        ArrayList<DolarHistorico> historialCotizaciones = new ArrayList();
+
         open();
 
         Cursor fila = BaseDeDatos.rawQuery("SELECT fecha, compra, venta FROM historico", null);
         //Cursor fila = BaseDeDatos.rawQuery("SELECT compra, venta FROM historico WHERE fecha='" + db_fecha_cal + "'", null);
-        DolarOficial dolar;
-        // lo siguiente retorna true si encuentra datos dentro de la "tabla" y los muestra en pantalla
+        DolarHistorico dolar;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        Date datefechaSelec,datefechadb;
-        String fechadb;
-        DateFormat formateadorBarra = new SimpleDateFormat("dd/MM/yyyy");
-
-        if (fila.moveToFirst()) {
-            fechadb=(fila.getString(0));
-
-            try {
-                datefechadb = formateadorBarra.parse(fechadb);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                datefechaSelec = formateadorBarra.parse(db_fecha_cal);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
+        if (fila.moveToFirst()) { //retorna true si encuentra datos dentro de la "tabla" y los muestra en pantalla
+            dateFechaDB = LocalDate.parse((fila.getString(0)), formatter);
             do {
-                if (datefechadb.equals(datefechaSelec)) {
-                    fecha = (fila.getString(0));
-                    compra = (fila.getString(1));
-                    venta = (fila.getString(2));
+                //if (dateFechaDB.equals(datefechaSelec)) {
+                fecha = (fila.getString(0));
+                dateFecha = LocalDate.parse(fecha, formatter);
+                compra = (fila.getString(1));
+                venta = (fila.getString(2));
 
-                    dolar = new DolarOficial(fecha,compra,venta);
-                    historicos.add(dolar);
-                }
-            } while (fila.moveToNext()); // hay que hacer que pare en 7 dias
+                dolar = new DolarHistorico(dateFecha,compra,venta);
+                historialCotizaciones.add(dolar);
+                //}
+            } while (fila.moveToNext());
         }
         close();
-        return historicos;
+        return historialCotizaciones;
     }
 
     //metodo para elimiar

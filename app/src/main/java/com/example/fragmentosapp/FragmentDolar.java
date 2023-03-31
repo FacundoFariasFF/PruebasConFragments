@@ -60,19 +60,11 @@ public class FragmentDolar extends Fragment {
         tv_venta = rootView.findViewById(R.id.txt_venta_ofical);
 
 
-        /*if (fecha.equals("30/11/0002")||fecha.equals("29/11/0002")){
-            tv_fecha.setText("Fecha: No selecciono una fecha");
-        }else {
-            tv_fecha.setText("Fecha: "+fecha);
-        }*/
-
         MainActivity.fragmentActivo ="HistorialDolarOficial";
         MainActivity.compartirNombre= "Dolar Oficial";
         MainActivity.compartirFecha = fecha;
         MainActivity.compartirCompra = compra;
         MainActivity.compartirVenta = venta;
-
-        ;
 
         //MainActivity.ItemMoneda(fecha);
 

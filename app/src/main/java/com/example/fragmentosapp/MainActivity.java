@@ -22,12 +22,7 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
-
-
-
     static MenuItem itemMonedas;
-    boolean[] opciones = new boolean[7];
-
     static String compartirNombre="", compartirFecha="", compartirCompra="", compartirVenta="";
     static String fragmentActivo="";
     static List<Monedas> monedasList;
@@ -39,26 +34,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //opciones[0]=true;
-        //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, FragmentCotizaciones.newInstance(opciones)).commit();
-
         DialogCalendario.fechaSeleccionada = LocalDate.now();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentPager()).commit();
 
-
     }
-    //// menu
+//// menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main,menu);
 
-       itemMonedas = menu.findItem(R.id.menu_cotizaciones);
+        itemMonedas = menu.findItem(R.id.menu_cotizaciones);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-
         switch (item.getItemId()){
             case R.id.menu_back:
                 System.exit(0);
@@ -81,12 +71,9 @@ public class MainActivity extends AppCompatActivity {
                 return  super.onOptionsItemSelected(item);
         }
     }
-
-    static public void ItemMoneda(@NonNull String fecha){
-        Calendar calendario = Calendar.getInstance();
-        DateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
-        String fechaDiaDeHoy = (formateador.format(calendario.getTime()));
-
+////
+    static public void ItemMoneda(@NonNull LocalDate fecha){
+        LocalDate fechaDiaDeHoy = LocalDate.now();
         if (!fechaDiaDeHoy.equals(fecha)){
             itemMonedas.setEnabled(false);
             itemMonedas.setVisible(false);
@@ -96,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //// Dialog fragment cotizaciones de monedas
+//// Dialog fragment cotizaciones de monedas
     public void Monedas(){
         DialogFragment dialogo = new DialogFragment();
         dialogo.show(getSupportFragmentManager(), "dialogo");
@@ -110,9 +97,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-//// metodo para compartir las cotizaciones que aparezcan en  pantalla
+//// metodo para compartir las cotizaciones que aparezcan en pantalla
     public void Compartir(){
-
         DialogFragmentCompartir dialogCompartir = new DialogFragmentCompartir("Compartir Cotizacion");
         dialogCompartir.show(getSupportFragmentManager(),"dialogo");
 
@@ -141,9 +127,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 /////
-
     public void Calendario(){
-
         DialogCalendario dialogCalendario= new DialogCalendario();
         dialogCalendario.show(getSupportFragmentManager(),"dialogo");
         dialogCalendario.ProcesarRespuestaCalendario(new DialogCalendario.RespuestasCalendario() {
@@ -154,23 +138,10 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-
             @Override
             public void CancelarCalendario(DialogFragment dialogCalendario) {
-
             }
         });
-
     }
-
-    /*@Override
-    public void onAttachFragment(Fragment fragment) {
-        if (fragment instanceof FragmentDolar) {
-            FragmentDolar headlinesFragment = (FragmentDolar) fragment;
-            headlinesFragment.setEnviarFecha(this);
-        }
-    }*/
-
-
 /////
 }

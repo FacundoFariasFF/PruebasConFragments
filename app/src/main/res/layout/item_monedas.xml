@@ -10,7 +10,7 @@
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#FF9EADFB"
+        app:cardBackgroundColor="#FF220D49"
         app:cardCornerRadius="50dp"
         app:cardElevation="8dp"
         android:layout_marginTop="10dp"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="4dp"
-            android:background="#220D49">
+            >
 
             <ImageView
                 android:id="@+id/imagen_nombre"

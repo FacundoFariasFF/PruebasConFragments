@@ -11,9 +11,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.time.LocalDate;
+
 public class DialogFragment extends androidx.fragment.app.DialogFragment {
     boolean[] checks = new boolean[7];
-
+    LocalDate diaActual= LocalDate.now();
     public  DialogFragment(){
 
     }
@@ -23,7 +25,8 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Seleccionar Monedas");
+            builder.setTitle("Cotizaciones del dia: "+diaActual +"."+ '\n'+ "Seleccione las que desea ver.");
+
             View selector = getLayoutInflater().inflate(R.layout.fragment_dialog, null);
             builder.setView(selector);
             String[] monedas = {"Dolar Oficial", "Dolar Blue", "Dolar Soja", "Dolar Contado Con liqui", "Dolar Bolsa",

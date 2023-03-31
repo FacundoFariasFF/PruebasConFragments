@@ -35,23 +35,17 @@ public class FragmentCotizaciones extends Fragment {
     View rootView;
 
     static boolean arrayCheck[];
-    boolean[] checks = new boolean[7];
-    TextView tvDialog;
-
     private static RequestQueue queue;
     RecyclerView recyclerView;
     List<Monedas> monedasList;
     MonedasAdapter adapter;
     boolean[] opcion;
-
     String fechaHoy;
-
 
 
     public FragmentCotizaciones() {
         // Required empty public constructor
     }
-
 
     public static FragmentCotizaciones newInstance(boolean[] opcion) {
         FragmentCotizaciones fragment = new FragmentCotizaciones();
@@ -66,10 +60,8 @@ public class FragmentCotizaciones extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             opcion = getArguments().getBooleanArray("opcion");
-            //opcion[0]=true;
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,44 +86,8 @@ public class FragmentCotizaciones extends Fragment {
 
         ObtenerDatosVolleyMonedas(opcion);
 
-       // if (checks[0]==false) {
-            /*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            //builder.setTitle("Seleccionar Monedas");
-            View selector = getLayoutInflater().inflate(R.layout.fragment_dialog, null);
-            tvDialog = selector.findViewById(R.id.text_dialog);
-            builder.setView(selector);
-            String[] monedas = {"Dolar Oficial", "Dolar Blue", "Dolar Soja", "Dolar Contado Con liqui", "Dolar Bolsa",
-                    "Bitcoin", "Dolar Turista"};
-            builder.setMultiChoiceItems(monedas, checks, new DialogInterface.OnMultiChoiceClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-
-                for (int i=0;i<checks.length;i++){
-                    if (checks[i]){
-                       // todo=todo+monedas[i]+"-";
-                    }
-                }
-                //tvDialog.setText(todo);*//*
-                }
-            });
-            builder.setPositiveButton("confirmar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ObtenerDatosVolleyMonedas();
-                }
-            });
-            builder.create().show();*/
-            //Monedas();
-
-        //}else {
-
-        //ObtenerDatosVolleyMonedas(new boolean[]{checks[0] = true});
-        ///
         return rootView;
     }
-
-
-
 
     public void ObtenerDatosVolleyMonedas(boolean[] checks){
         queue = Volley.newRequestQueue(getActivity());
@@ -153,18 +109,6 @@ public class FragmentCotizaciones extends Fragment {
                         monedasList.add(moneda);
                     }
                 }
-
-                /*for (int i=0;i<response.length()-2;i++){
-                    JSONObject mJsonObject =  response.getJSONObject(1);
-                    JSONObject mJsonObject2 =  mJsonObject.getJSONObject("casa");
-                    String nom_moneda = mJsonObject2.getString("nombre");
-                    String pre_compra = mJsonObject2.getString("compra");
-                    String pre_venta = mJsonObject2.getString("venta");
-                    String val_variacion = mJsonObject2.has("variacion") ? mJsonObject2.getString("variacion") : "";
-
-                    Monedas moneda = new Monedas(nom_moneda,pre_compra,pre_venta,val_variacion);
-                    monedasList.add(moneda);
-                }*/
                 MainActivity.monedasList = monedasList;
                 adapter = new MonedasAdapter(getActivity(),monedasList);
                 recyclerView.setAdapter(adapter);
@@ -175,5 +119,4 @@ public class FragmentCotizaciones extends Fragment {
         });
         queue.add(request);
     }
-
 }

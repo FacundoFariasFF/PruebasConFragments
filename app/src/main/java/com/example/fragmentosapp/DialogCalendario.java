@@ -23,8 +23,6 @@ public class DialogCalendario extends DialogFragment {
     public DialogCalendario(){
     }
 
-
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

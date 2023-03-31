@@ -6,14 +6,19 @@
     android:background="@color/white"
     tools:context=".FragmentCotizaciones">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/fondocolorarrugado" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>
