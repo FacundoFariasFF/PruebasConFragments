@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 
@@ -38,17 +39,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         //opciones[0]=true;
         //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, FragmentCotizaciones.newInstance(opciones)).commit();
 
-
-        Calendar calendario = Calendar.getInstance();
-        DateFormat formateador = new SimpleDateFormat("dd-M-yyyy");
-        String fechaHoy = (formateador.format(calendario.getTime()));
-        DialogCalendario.fechaSelec = fechaHoy;
-        //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentPager()).commit();
+        DialogCalendario.fechaSeleccionada = LocalDate.now();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, new FragmentPager()).commit();
 
 
     }
